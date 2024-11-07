@@ -17,7 +17,6 @@ public class Initializer : ICarbonComponent
 	{
 		Logger.Debug($"Triggered '{this}' OnEnable");
 	}
-
 	public void OnDisable(EventArgs args)
 	{
 		Logger.Debug($"Triggered '{this}' OnDisable");
@@ -165,7 +164,6 @@ public class Initializer : ICarbonComponent
 			return;
 		}
 	}
-
 	public void OnUnloaded(EventArgs args)
 	{	
 		Logger.Log("Uninitalizing...");
