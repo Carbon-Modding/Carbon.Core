@@ -16,11 +16,11 @@ public class HookCallerInternal : HookCallerCommon
 	{
 		if (_argumentBuffer.TryGetValue(count, out var pool))
 		{
-			return pool.Take();
+			return pool.Rent();
 		}
 
 		_argumentBuffer[count] = pool = new HookArgPool(count, 15);
-		return pool.Take();
+		return pool.Rent();
 	}
 	public override object[] RescaleBuffer(object[] oldBuffer, int newScale, CachedHook hook)
 	{
