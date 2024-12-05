@@ -33,6 +33,12 @@ if "%DEFINES%" EQU "" (
 	echo ** Defines: %DEFINES%
 )
 
+if "%BUILD_TARGET%" EQU "Debug" (
+	set CARGO_TARGET=release
+) else (
+	set CARGO_TARGET=prod
+)
+
 echo ** Build the solution
 dotnet restore "%BUILD_ROOT%\Carbon.Core" -v:m --nologo || exit /b
 dotnet   clean "%BUILD_ROOT%\Carbon.Core" -v:m --configuration %BUILD_TARGET% --nologo || exit /b
@@ -44,12 +50,12 @@ echo "%BUILD_TARGET%" | findstr /C:"Unix" >NUL && (
 	copy /y "%BUILD_ROOT%\Tools\Helpers\carbon.sh"                      										"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon.sh"
 	copy /y "%BUILD_ROOT%\Tools\Helpers\environment.sh"                 										"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\tools\"
 	copy /y "%BUILD_ROOT%\Tools\UnityDoorstop\linux\x64\libdoorstop.so" 										"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\libdoorstop.so"
-	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-unknown-linux-gnu\release\libCarbonNative.so"	"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\native\libCarbonNative.so"
+	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-unknown-linux-gnu\%CARGO_TARGET%\libCarbonNative.so"	"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\native\libCarbonNative.so"
 	(CALL )				
 ) || (                                                                  				                                                        
 	copy /y "%BUILD_ROOT%\Tools\Helpers\doorstop_config.ini"            										"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%"                                
 	copy /y "%BUILD_ROOT%\Tools\UnityDoorstop\windows\x64\doorstop.dll" 										"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\winhttp.dll"    
-	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-pc-windows-msvc\release\CarbonNative.dll"		"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\native\CarbonNative.dll"
+	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-pc-windows-msvc\%CARGO_TARGET%\CarbonNative.dll"		"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\native\CarbonNative.dll"
 	(CALL )
 )
 
