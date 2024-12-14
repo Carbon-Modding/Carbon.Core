@@ -16,7 +16,7 @@
 
 				<!-- We want to override corelib to have the new lang features -->
 				<WarningsNotAsErrorsWarningsNotAsErrors>CS1685</WarningsNotAsErrorsWarningsNotAsErrors>
-				<NoWarn>CS1685;CS7035;CS1522</NoWarn>
+				<NoWarn>CS1685;CS7035;CS1522;CS0618</NoWarn>
 
 				<!-- -->
 				<ConfigurationNormalized>Release</ConfigurationNormalized>
@@ -32,7 +32,7 @@
 
 				<!-- We want to override corelib to have the new lang features -->
 				<WarningsNotAsErrors>CS1685</WarningsNotAsErrors>
-				<NoWarn>CS1685;CS7035;CS1522</NoWarn>
+				<NoWarn>CS1685;CS7035;CS1522;CS0618</NoWarn>
 
 				<!-- -->
 				<ConfigurationNormalized>Minimal</ConfigurationNormalized>
@@ -48,7 +48,7 @@
 				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 
 				<!-- We want to override corelib to have the new lang features -->
-				<NoWarn>CS1685;CS7035;CS1522</NoWarn>
+				<NoWarn>CS1685;CS7035;CS1522;CS0618</NoWarn>
 
 				<!-- -->
 				<ConfigurationNormalized>Debug</ConfigurationNormalized>

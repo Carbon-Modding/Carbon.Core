@@ -52,3 +52,6 @@
 [submodule "Tools/DepotDownloader"]
 	path = Tools/DepotDownloader
 	url = https://github.com/CarbonCommunity/Carbon.Depot.git
+[submodule "Carbon.Core/Carbon.Components/Carbon.Common.Client"]
+	path = Carbon.Core/Carbon.Components/Carbon.Common.Client
+	url = https://github.com/CarbonCommunity/Carbon.Common.Client.V2.git

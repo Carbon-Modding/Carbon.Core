@@ -14,12 +14,14 @@ public class ModuleProcessor : BaseProcessor, IModuleProcessor
 	public override string Name => "Module Processor";
 	public override bool EnableWatcher => false;
 
-	List<BaseHookable> IModuleProcessor.Modules { get => _modules; }
+	List<BaseHookable> IModuleProcessor.Modules { get; } = new(200);
 
-	internal List<BaseHookable> _modules { get; set; } = new(200);
+	internal List<BaseHookable> _modules;
 
 	public void Init()
 	{
+		_modules = (this as IModuleProcessor).Modules;
+
 		// TODO ---------------------------------------------------------------
 		// This needs to go into the ModuleManager. Each module must implement
 		// the ICarbonModule. Currently is just a workaround to be compatible
