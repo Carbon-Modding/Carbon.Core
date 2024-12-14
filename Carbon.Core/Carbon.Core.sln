@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Bootstrap", "Carbon.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Common", "Carbon.Components\Carbon.Common\Carbon.Common.csproj", "{531A79E2-9D4E-4C69-B277-D668F515C209}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Common.Client", "Carbon.Components\Carbon.Common.Client\Carbon.Common.Client.csproj", "{B7D66C9C-8A52-4FF7-9CFE-2936A28A3001}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Common.Client.V2", "Carbon.Components\Carbon.Common.Client\Carbon.Common.Client.V2.csproj", "{B7D66C9C-8A52-4FF7-9CFE-2936A28A3001}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Preloader", "Carbon.Components\Carbon.Preloader\Carbon.Preloader.csproj", "{6F8322EF-79DA-478B-B39C-EAC40771A46F}"
 EndProject

@@ -6,10 +6,6 @@ name: Production Build
 concurrency: build-1-production
 
 on:    
-  push:
-    branches:
-      - production
-
   workflow_dispatch:
 
 jobs:
@@ -73,7 +69,7 @@ jobs:
     - uses: ClementTsang/cargo-action@v0.0.3
       with:
         command: build
-        args: -r --target x86_64-unknown-linux-gnu
+        args: --target x86_64-unknown-linux-gnu --profile prod
         directory: Carbon.Core/Carbon.Native
         
     - name: 🔨 Setup the Carbon build environment
@@ -156,7 +152,7 @@ jobs:
     - uses: ClementTsang/cargo-action@v0.0.3
       with:
         command: build
-        args: -r --target x86_64-pc-windows-msvc
+        args: --target x86_64-pc-windows-msvc --profile prod
         directory: Carbon.Core/Carbon.Native
         
     - name: 🔨 Setup the Carbon build environment
