@@ -28,7 +28,7 @@ else
 	echo "** Defines: ${DEFINES}"
 fi
 
-if [[ "${TARGET}" == "Debug" || "${TARGET}" == "DebugUnix" ]]; then
+if [[ "${TARGET}" == "Debug" || "${TARGET}" == "DebugUnix" || "${TARGET}" == "Minimal" || "${TARGET}" == "MinimalUnix" ]]; then
 	CARGO_TARGET="release"
 else
 	CARGO_TARGET="prod"

@@ -37,6 +37,10 @@ if "%BUILD_TARGET%" EQU "Debug" (
 	set CARGO_TARGET=release
 ) else if "%BUILD_TARGET%" EQU "DebugUnix" (
 	set CARGO_TARGET=release
+) else if "%BUILD_TARGET%" EQU "Minimal" (
+	set CARGO_TARGET=release
+) else if "%BUILD_TARGET%" EQU "MinimalUnix" (
+	set CARGO_TARGET=release
 ) else (
 	set CARGO_TARGET=prod
 )
