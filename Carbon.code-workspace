@@ -20,19 +20,16 @@
         "color": "#ff000025"
       }
     ],
-
     "files.watcherExclude": {
       "**/.git/objects/**": true,
       "**/.git/subtree-cache/**": true,
       "**/node_modules/*/**": true
     },
-
-    "omnisharp.enableImportCompletion": true,
     "omnisharp.organizeImportsOnFormat": true,
-
     "[csharp]": {
       "editor.defaultFormatter": "ms-dotnettools.csharp"
-    }
+    },
+    "dotnet.completion.showCompletionItemsFromUnimportedNamespaces": true
   },
   "extensions": {
     "recommendations": [
