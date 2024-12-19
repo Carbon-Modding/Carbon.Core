@@ -69,6 +69,13 @@ jobs:
     - uses: ClementTsang/cargo-action@v0.0.3
       with:
         command: build
+        args: -r --target x86_64-unknown-linux-gnu
+        directory: Carbon.Core/Carbon.Native
+        
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: ClementTsang/cargo-action@v0.0.3
+      with:
+        command: build
         args: --target x86_64-unknown-linux-gnu --profile prod
         directory: Carbon.Core/Carbon.Native
         
@@ -152,7 +159,14 @@ jobs:
     - uses: ClementTsang/cargo-action@v0.0.3
       with:
         command: build
-        args: --target x86_64-pc-windows-msvc --profile prod
+        args: -r --target x86_64-unknown-linux-gnu
+        directory: Carbon.Core/Carbon.Native
+        
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: ClementTsang/cargo-action@v0.0.3
+      with:
+        command: build
+        args: --target x86_64-unknown-linux-gnu --profile prod
         directory: Carbon.Core/Carbon.Native
         
     - name: 🔨 Setup the Carbon build environment
