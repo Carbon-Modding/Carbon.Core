@@ -10,16 +10,12 @@ public class Initializer : ICarbonComponent
 {
 	public void Awake(EventArgs args)
 	{
-		Logger.Debug($"A new instance of '{this}' created");
 	}
-
 	public void OnEnable(EventArgs args)
 	{
-		Logger.Debug($"Triggered '{this}' OnEnable");
 	}
 	public void OnDisable(EventArgs args)
 	{
-		Logger.Debug($"Triggered '{this}' OnDisable");
 	}
 
 	public void OnLoaded(EventArgs args)

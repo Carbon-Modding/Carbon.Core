@@ -6,6 +6,7 @@ using System.Text;
 using API.Hooks;
 using Carbon.Extensions;
 using Carbon.Pooling;
+using Facepunch;
 using HarmonyLib;
 
 /*
@@ -182,7 +183,7 @@ public class HookEx : IDisposable, IHook
 #if DEBUG
 		catch (HarmonyException e)
 		{
-			var sb = PoolEx.GetStringBuilder();
+			var sb = Pool.Get<StringBuilder>();
 			Logger.Error($"Error while patching hook '{this}' index:{e.GetErrorIndex()} offset:{e.GetErrorOffset()}", e);
 			sb.AppendLine($"{e.InnerException?.Message.Trim() ?? string.Empty}");
 
@@ -191,7 +192,7 @@ public class HookEx : IDisposable, IHook
 				sb.AppendLine($"\t{x++:000} {instruction.Key:X4}: {instruction.Value}");
 
 			Logger.Error(sb.ToString());
-			PoolEx.FreeStringBuilder(ref sb);
+			Pool.FreeUnmanaged(ref sb);
 			return false;
 		}
 #endif
