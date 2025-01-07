@@ -11,7 +11,7 @@ on:
       protocol:
         description: 'Carbon Protocol'
         required: true
-        default: '2024.MM.DD.0'
+        default: '2025.MM.DD.0'
         type: string
 
       carbon_branch:
