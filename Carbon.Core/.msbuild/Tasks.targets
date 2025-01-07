@@ -50,7 +50,6 @@
 
 			<c_tools>$(CarbonBaseDir)\carbon\tools</c_tools>
 			<c_ext>$(CarbonBaseDir)\carbon\extensions</c_ext>
-			<c_harmony>$(CarbonBaseDir)\carbon\harmony</c_harmony>
 
 			<c_managed>$(CarbonBaseDir)\carbon\managed</c_managed>
 			<c_native>$(CarbonBaseDir)\carbon\native</c_native>
@@ -65,7 +64,7 @@
 
 		<Message Text="[$(AssemblyName)] Create the release folders at '$(CarbonBaseDir)'" Importance="high" />
 		<MakeDir Directories="$(CarbonBaseDir)" />
-		<MakeDir Directories="$(c_tools);$(c_ext);$(c_harmony)" />
+		<MakeDir Directories="$(c_tools);$(c_ext)" />
 		<MakeDir Directories="$(c_managed);$(c_native);$(c_hooks);$(c_lib);$(c_modules)" />
 		<MakeDir Directories="$(c_plugins);$(c_data);$(c_cfg)" />
 	</Target>
