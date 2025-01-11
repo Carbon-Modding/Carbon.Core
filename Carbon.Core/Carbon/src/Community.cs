@@ -12,6 +12,7 @@ using System.Linq;
 using API.Commands;
 using UnityEngine;
 using Carbon.Client;
+using Carbon.Jobs;
 
 namespace Carbon;
 
@@ -91,6 +92,7 @@ public class CommunityInternal : Community
 		}
 
 		_registerProcessors();
+		ScriptCompilationThread._injectPatchedReferences();
 	}
 	internal void _installTest()
 	{
