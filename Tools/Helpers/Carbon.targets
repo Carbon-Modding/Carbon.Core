@@ -1,0 +1,31 @@
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <NoStandardLibraries>true</NoStandardLibraries>
+        <NoStdLib>true</NoStdLib>
+        <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
+        <NoCompilerStandardLib>true</NoCompilerStandardLib>
+        <RustServerRootPath>$(MSBuildThisFileDirectory)</RustServerRootPath>
+        <RustPatchedManagedPath>$(RustServerRootPath)carbon/developer/patched_assemblies</RustPatchedManagedPath>
+        <RustServerManagedPath>$(RustServerRootPath)RustDedicated_Data/Managed</RustServerManagedPath>
+        <CarbonManagedPath>$(RustServerRootPath)carbon/managed</CarbonManagedPath>
+        <CarbonManagedLibPath>$(CarbonManagedPath)/lib</CarbonManagedLibPath>
+    </PropertyGroup>
+    <ItemGroup>
+			  <Reference Include="$(RustServerManagedPath)/*" >
+          <Private>false</Private>
+        </Reference>
+        <Reference Include="$(RustPatchedManagedPath)/*" >
+          <Private>false</Private>
+        </Reference>
+        <Reference Include="$(CarbonManagedPath)/Carbon.SDK.dll" >
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(CarbonManagedPath)/Carbon.Common.dll" >
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(CarbonManagedPath)/Carbon.dll" >
+            <Private>false</Private>
+        </Reference>
+        <Reference Remove="$(RustServerManagedPath)/Unity.Burst.Cecil.dll" />
+    </ItemGroup>
+</Project>

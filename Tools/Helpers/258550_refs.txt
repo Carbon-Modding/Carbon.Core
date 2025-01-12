@@ -1,6 +1,7 @@
 regex:0Harmony.dll
 regex:Assembly-CSharp-firstpass.dll
 regex:Assembly-CSharp.dll
+regex:Cronos.dll
 regex:EZhex1991.EZSoftBone.dll
 regex:Facepunch.BurstCloth.dll
 regex:Facepunch.Console.dll
