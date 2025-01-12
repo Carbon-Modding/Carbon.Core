@@ -47,7 +47,7 @@ for OS in windows linux; do
 		"${ROOT}/Tools/Helpers/258550_refs.txt" -dir "${ROOT}/Rust/${OS}"
 
 	mono "${ROOT}/Tools/Helpers/Publicizer.exe" \
-		-input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed" -carbon.rustrootdir "${ROOT}/Rust/${OS}"
+		-input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed" -carbon.rustrootdir "${ROOT}/Rust/${OS}" -carbon.logdir "${ROOT}/Rust/${OS}"
 done
 
 dotnet restore "${ROOT}/Carbon.Core" --nologo

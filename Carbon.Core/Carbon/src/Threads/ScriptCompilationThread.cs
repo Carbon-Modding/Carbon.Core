@@ -121,6 +121,15 @@ public class ScriptCompilationThread : BaseThreadedJob
 		if (_extensionCompilationCache.ContainsKey(name)) _extensionCompilationCache.TryRemove(name, out _);
 		if (_extensionReferenceCache.ContainsKey(name)) _extensionReferenceCache.Remove(name);
 	}
+	internal static void _injectPatchedReferences()
+	{
+		foreach (var assembly in Community.Runtime.Config.Publicizer.PublicizedAssemblies)
+		{
+			var correctedName = assembly.Replace(".dll", string.Empty);
+			using var stream = new MemoryStream(API.Assembly.PatchedAssemblies.AssemblyCache[correctedName]);
+			_referenceCache[correctedName] = PortableExecutableReference.CreateFromStream(stream);
+		}
+	}
 	internal void _injectReference(string id, string name, List<MetadataReference> references, string[] directories, bool direct = false, bool allowCache = true)
 	{
 		if (allowCache && _referenceCache.TryGetValue(name, out var reference))
