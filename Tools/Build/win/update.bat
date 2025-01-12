@@ -46,7 +46,7 @@ FOR %%O IN (windows linux) DO (
 		"%UPDATE_ROOT%\Tools\Helpers\258550_refs.txt" -dir "%UPDATE_ROOT%\Rust\%%O"
 
 	"%UPDATE_ROOT%\Tools\Helpers\Publicizer.exe" ^
-		-input "%UPDATE_ROOT%\Rust\%%O\RustDedicated_Data\Managed" -carbon.rustrootdir "%UPDATE_ROOT%\Rust\%%O"
+		-input "%UPDATE_ROOT%\Rust\%%O\RustDedicated_Data\Managed" -carbon.rustrootdir "%UPDATE_ROOT%\Rust\%%O" -carbon.logdir "%UPDATE_ROOT%\Rust\%%O"
 )
 
 dotnet restore "%UPDATE_ROOT%\Carbon.Core" --nologo
