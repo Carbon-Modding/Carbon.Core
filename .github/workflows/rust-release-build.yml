@@ -95,7 +95,7 @@ jobs:
         ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh MinimalUnix RUST_RELEASE "rustbeta_release"
         
     - name: ⬆️ Upload the artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-release-linux
         path: |
@@ -151,7 +151,7 @@ jobs:
         call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Minimal RUST_RELEASE rustbeta_release
 
     - name: ⬆️ Upload the artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-release-windows
         path: |
@@ -185,7 +185,7 @@ jobs:
       shell: bash
 
     - name: ⬇️ Download artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         path: Release
 
