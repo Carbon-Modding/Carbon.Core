@@ -121,6 +121,15 @@ public class ScriptCompilationThread : BaseThreadedJob
 		if (_extensionCompilationCache.ContainsKey(name)) _extensionCompilationCache.TryRemove(name, out _);
 		if (_extensionReferenceCache.ContainsKey(name)) _extensionReferenceCache.Remove(name);
 	}
+	internal static void _injectPatchedReferences()
+	{
+		foreach (var assembly in Community.Runtime.Config.Publicizer.PublicizedAssemblies)
+		{
+			var correctedName = assembly.Replace(".dll", string.Empty);
+			using var stream = new MemoryStream(API.Assembly.PatchedAssemblies.AssemblyCache[correctedName]);
+			_referenceCache[correctedName] = PortableExecutableReference.CreateFromStream(stream);
+		}
+	}
 	internal void _injectReference(string id, string name, List<MetadataReference> references, string[] directories, bool direct = false, bool allowCache = true)
 	{
 		if (allowCache && _referenceCache.TryGetValue(name, out var reference))
@@ -139,7 +148,10 @@ public class ScriptCompilationThread : BaseThreadedJob
 				{
 					foreach (var file in OsEx.Folder.GetFilesWithExtension(directory, "dll"))
 					{
-						if (!file.Contains(name)) continue;
+						if (!file.Contains(name))
+						{
+							continue;
+						}
 						raw = OsEx.File.ReadBytes(file);
 						found = true;
 						break;
@@ -157,7 +169,6 @@ public class ScriptCompilationThread : BaseThreadedJob
 
 			using var mem = new MemoryStream(raw);
 			var processedReference = MetadataReference.CreateFromStream(mem);
-
 			references.Add(processedReference);
 			_referenceCache[name] = processedReference;
 			Logger.Debug(id, $"Added common reference '{name}'", 4);
@@ -186,7 +197,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 		var references = new List<MetadataReference>();
 		var id = Path.GetFileNameWithoutExtension(InitialSource.FilePath);
 
-		_injectReference(id, "0Harmony", references, _libraryDirectories);
+		_injectReference(id, "0Harmony", references, _libraryDirectories, true);
 
 		foreach (var item in Community.Runtime.AssemblyEx.RefWhitelist)
 		{

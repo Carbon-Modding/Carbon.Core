@@ -11,7 +11,7 @@ on:
       protocol:
         description: 'Carbon Protocol'
         required: true
-        default: '2024.MM.DD.0'
+        default: '2025.MM.DD.0'
         type: string
 
       carbon_branch:
@@ -128,7 +128,7 @@ jobs:
         call discord.bat %RUST_BRANCH% %PROTOCOL%
         
     - name: ⬆️ Artifacts - Upload
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: FTP Output
         path: |

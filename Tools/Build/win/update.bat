@@ -45,21 +45,8 @@ FOR %%O IN (windows linux) DO (
 		-os %%O -validate -app 258550 -branch %UPDATE_TARGET% -filelist ^
 		"%UPDATE_ROOT%\Tools\Helpers\258550_refs.txt" -dir "%UPDATE_ROOT%\Rust\%%O"
 
-	echo Publicizing %%O Rust Assembly-CSharp..
-
-	rem Show me all you've got baby
 	"%UPDATE_ROOT%\Tools\Helpers\Publicizer.exe" ^
-		--input "%UPDATE_ROOT%\Rust\%%O\RustDedicated_Data\Managed\Assembly-CSharp.dll"
-		
-	echo Publicizing %%O Rust Rust.Clans.Local...
-
-	"%UPDATE_ROOT%\Tools\Helpers\Publicizer.exe" ^
-		--input "%UPDATE_ROOT%\Rust\%%O\RustDedicated_Data\Managed\Rust.Clans.Local.dll"
-
-	echo Publicizing %%O Rust Facepunch.Network...
-
-	"%UPDATE_ROOT%\Tools\Helpers\Publicizer.exe" ^
-		--input "%UPDATE_ROOT%\Rust\%%O\RustDedicated_Data\Managed\Facepunch.Network.dll"
+		-input "%UPDATE_ROOT%\Rust\%%O\RustDedicated_Data\Managed" -carbon.rustrootdir "%UPDATE_ROOT%\Rust\%%O" -carbon.logdir "%UPDATE_ROOT%\Rust\%%O"
 )
 
 dotnet restore "%UPDATE_ROOT%\Carbon.Core" --nologo

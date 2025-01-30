@@ -370,7 +370,7 @@ public class ScriptLoader : IScriptLoader
 
 		yield return null;
 
-		if (AsyncLoader.Assembly == null)
+		if (AsyncLoader != null && AsyncLoader.Assembly == null)
 		{
 			if (AsyncLoader.Exceptions != null && AsyncLoader.Exceptions.Count > 0)
 			{
@@ -424,7 +424,7 @@ public class ScriptLoader : IScriptLoader
 
 #if DEBUG
 				OsEx.File.Create(Path.Combine(Defines.GetScriptDebugFolder(), $"{AsyncLoader.InitialSource.ContextFileName}.Internal.cs"), AsyncLoader.InternalCallHookSource);
-#endif	
+#endif
 			}
 
 			AsyncLoader.Exceptions?.Clear();
@@ -436,6 +436,11 @@ public class ScriptLoader : IScriptLoader
 			{
 				ModLoader.OnPluginProcessFinished();
 			}
+			yield break;
+		}
+
+		if (AsyncLoader == null)
+		{
 			yield break;
 		}
 

@@ -202,10 +202,7 @@ public class HookCallerInternal : HookCallerCommon
 					{
 						var exception = ex.InnerException ?? ex;
 						var readableHook = HookStringPool.GetOrAdd(hookId);
-						Carbon.Logger.Error(
-							$"Failed to call hook '{readableHook}' on plugin '{hookable.Name} v{hookable.Version}'",
-							exception
-						);
+						Logger.Error($"Failed to call hook '{readableHook}' on plugin '{hookable.Name} v{hookable.Version}'", exception);
 					}
 				}
 			}
@@ -243,10 +240,7 @@ public class HookCallerInternal : HookCallerCommon
 				{
 					var exception = ex.InnerException ?? ex;
 					var readableHook = HookStringPool.GetOrAdd(hookId);
-					Carbon.Logger.Error(
-						$"Failed to call hook '{readableHook}' on plugin '{hookable.Name} v{hookable.Version}'",
-						exception
-					);
+					Carbon.Logger.Error($"Failed to call hook '{readableHook}' on plugin '{hookable.Name} v{hookable.Version}'", exception);
 				}
 
 				hookable.TrackEnd();

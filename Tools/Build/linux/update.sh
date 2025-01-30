@@ -46,15 +46,8 @@ for OS in windows linux; do
 		-os ${OS} -validate -app 258550 -branch ${TARGET} -filelist \
 		"${ROOT}/Tools/Helpers/258550_refs.txt" -dir "${ROOT}/Rust/${OS}"
 
-	# Show me all you've got baby
 	mono "${ROOT}/Tools/Helpers/Publicizer.exe" \
-		--input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed/Assembly-CSharp.dll"
-
-	mono "${ROOT}/Tools/Helpers/Publicizer.exe" \
-		--input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed/Rust.Clans.Local.dll"
-
-	mono "${ROOT}/Tools/Helpers/Publicizer.exe" \
-		--input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed/Facepunch.Network.dll"
+		-input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed" -carbon.rustrootdir "${ROOT}/Rust/${OS}" -carbon.logdir "${ROOT}/Rust/${OS}"
 done
 
 dotnet restore "${ROOT}/Carbon.Core" --nologo
