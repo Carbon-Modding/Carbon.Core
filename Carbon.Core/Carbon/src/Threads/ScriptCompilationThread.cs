@@ -287,6 +287,11 @@ public class ScriptCompilationThread : BaseThreadedJob
 		{
 			try
 			{
+				if (_referenceCache.ContainsKey(reference))
+				{
+					continue;
+				}
+
 				var extensionFile = Path.Combine(Defines.GetExtensionsFolder(), $"{reference}.dll");
 				if (OsEx.File.Exists(extensionFile))
 				{
