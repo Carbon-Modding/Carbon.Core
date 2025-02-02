@@ -77,10 +77,6 @@ Carbon's hooks are managed in a separate location:
 - [Carbon.Hooks.Community](https://github.com/CarbonCommunity/Carbon.Hooks.Community/tree/develop): Community curated patches and hooks.
 - [Carbon.Hooks.Oxide](https://github.com/CarbonCommunity/Carbon.Hooks.Oxide/tree/develop): Oxide compatibility package, primarily utilized for internal use whenever going through the automatic patch code generation process.
 
-### Dynamic Hooks
-Each Carbon version has its own protocol which relative to that, so does the hooks that get automatically updated upon boot.
-You can find the directory [here](https://carbonmod.gg/redist/server).
-
 ### Building
 To locally build Carbon from scratch, execute the [`build.bat`](https://github.com/CarbonCommunity/Carbon/tree/develop/Tools/Build/win) file, and find the results in the root of Carbon, under `./Release`.
 
@@ -93,6 +89,6 @@ We would like to thank everyone who sponsors us.
 [hooks]: https://docs.carbonmod.gg/docs/core/hooks
 [discord]: https://discord.gg/carbonmod
 [documentation]: https://docs.carbonmod.gg/
-[patreon]: https://patreon.com/CarbonCommunity
+[patreon]: https://patreon.com/CarbonMod
 [production]: https://github.com/CarbonCommunity/Carbon.Core/releases/tag/production_build
 [quick-start]: https://github.com/CarbonCommunity/Carbon.QuickStart
