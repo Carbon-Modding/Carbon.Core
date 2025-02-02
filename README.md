@@ -89,10 +89,9 @@ If you would like to [sponsor][patreon] the project the best way is to use [Patr
 
 We would like to thank everyone who sponsors us.
 
-[hooks]: https://docs.gitbook.io/docs/core/hooks/carbon-hooks
-[wiki]: https://github.com/CarbonCommunity/Carbon.Core/wiki
-[discord]: https://discord.gg/eXPcNKK4yd
-[documentation]: https://carboncommunity.gitbook.io/docs
+[hooks]: https://docs.carbonmod.gg/docs/core/hooks
+[discord]: https://discord.gg/carbonmod
+[documentation]: https://docs.carbonmod.gg/
 [patreon]: https://patreon.com/CarbonCommunity
 [production]: https://github.com/CarbonCommunity/Carbon.Core/releases/tag/production_build
 [quick-start]: https://github.com/CarbonCommunity/Carbon.QuickStart
