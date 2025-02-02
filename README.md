@@ -61,7 +61,8 @@ The following branches are shared across all Component and Hook projects and syn
   - Public [build](https://github.com/CarbonCommunity/Carbon/releases/tag/rustbeta_aux02_build), gets updated a few times a month. Usually only hooks get updated.
 
 ### Components
-- [Carbon.Preloader](https://github.com/CarbonCommunity/Carbon.Preloader/tree/develop): Runtime preloader of dependencies and responsible assembly patching (publicising, injecting, etc.).
+- [Carbon.Preloader](https://github.com/CarbonCommunity/Carbon.Preloader/tree/develop): Runtime preloader of dependencies and responsible for the self-updating process. It invokes Carbon.Startup.
+- [Carbon.Startup](https://github.com/CarbonCommunity/Carbon.Startup/tree/main): Handles in-memory Rust assembly patching and publicizing and exporting if Developer Mode is enabled in the config.
 - [Carbon.Bootstrap](https://github.com/CarbonCommunity/Carbon.Bootstrap/tree/develop): Initial Carbon execution and boot in the primary app-domain.
 - [Carbon.Common](https://github.com/CarbonCommunity/Carbon.Common/tree/develop): The very basis of Carbon, tools and extensions for overall use and functionality. Primarily a center piece for all dependant sub-components.
 - [Carbon.SDK](https://github.com/CarbonCommunity/Carbon.SDK/tree/develop): Infrastructural and contractual features with no implementation. An easy way to identify and organise the structure of our systems.
