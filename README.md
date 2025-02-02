@@ -1,6 +1,7 @@
+![Carbon Light Logo](https://raw.githubusercontent.com/CarbonCommunity/.github/refs/heads/main/profile/press/carbonlogo_w.png#gh-dark-mode-only)
+![Carbon Dark Logo](https://raw.githubusercontent.com/CarbonCommunity/.github/refs/heads/main/profile/press/carbonlogo_b.png#gh-light-mode-only)
+
 <p align="center">
-  <img src="https://carbonmod.gg/assets/media/carbonlogo_w.png" />
-</p><p align="center">
   <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/edge_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/edge-build.yml/badge.svg" /></a>
   <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/preview_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/preview-build.yml/badge.svg" /></a>
   <a href="https://github.com/CarbonCommunity/Carbon/releases/latest"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/production-build.yml/badge.svg" /></a>
