@@ -1,6 +1,7 @@
+![Carbon Light Logo](https://raw.githubusercontent.com/CarbonCommunity/.github/refs/heads/main/profile/press/carbonlogo_w.png#gh-dark-mode-only)
+![Carbon Dark Logo](https://raw.githubusercontent.com/CarbonCommunity/.github/refs/heads/main/profile/press/carbonlogo_b.png#gh-light-mode-only)
+
 <p align="center">
-  <img src="https://codefling.com/uploads/monthly_2023_03/image.thumb.png.276343ad1b15a658368a7ae6e252172f.png" />
-</p><p align="center">
   <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/edge_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/edge-build.yml/badge.svg" /></a>
   <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/preview_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/preview-build.yml/badge.svg" /></a>
   <a href="https://github.com/CarbonCommunity/Carbon/releases/latest"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/production-build.yml/badge.svg" /></a>
@@ -61,7 +62,8 @@ The following branches are shared across all Component and Hook projects and syn
   - Public [build](https://github.com/CarbonCommunity/Carbon/releases/tag/rustbeta_aux02_build), gets updated a few times a month. Usually only hooks get updated.
 
 ### Components
-- [Carbon.Preloader](https://github.com/CarbonCommunity/Carbon.Preloader/tree/develop): Runtime preloader of dependencies and responsible assembly patching (publicising, injecting, etc.).
+- [Carbon.Preloader](https://github.com/CarbonCommunity/Carbon.Preloader/tree/develop): Runtime preloader of dependencies and responsible for the self-updating process. It invokes Carbon.Startup.
+- [Carbon.Startup](https://github.com/CarbonCommunity/Carbon.Startup/tree/main): Handles in-memory Rust assembly patching and publicizing and exporting if Developer Mode is enabled in the config.
 - [Carbon.Bootstrap](https://github.com/CarbonCommunity/Carbon.Bootstrap/tree/develop): Initial Carbon execution and boot in the primary app-domain.
 - [Carbon.Common](https://github.com/CarbonCommunity/Carbon.Common/tree/develop): The very basis of Carbon, tools and extensions for overall use and functionality. Primarily a center piece for all dependant sub-components.
 - [Carbon.SDK](https://github.com/CarbonCommunity/Carbon.SDK/tree/develop): Infrastructural and contractual features with no implementation. An easy way to identify and organise the structure of our systems.
@@ -75,10 +77,6 @@ Carbon's hooks are managed in a separate location:
 - [Carbon.Hooks.Community](https://github.com/CarbonCommunity/Carbon.Hooks.Community/tree/develop): Community curated patches and hooks.
 - [Carbon.Hooks.Oxide](https://github.com/CarbonCommunity/Carbon.Hooks.Oxide/tree/develop): Oxide compatibility package, primarily utilized for internal use whenever going through the automatic patch code generation process.
 
-### Dynamic Hooks
-Each Carbon version has its own protocol which relative to that, so does the hooks that get automatically updated upon boot.
-You can find the directory [here](https://carbonmod.gg/redist/server).
-
 ### Building
 To locally build Carbon from scratch, execute the [`build.bat`](https://github.com/CarbonCommunity/Carbon/tree/develop/Tools/Build/win) file, and find the results in the root of Carbon, under `./Release`.
 
@@ -88,10 +86,9 @@ If you would like to [sponsor][patreon] the project the best way is to use [Patr
 
 We would like to thank everyone who sponsors us.
 
-[hooks]: https://docs.gitbook.io/docs/core/hooks/carbon-hooks
-[wiki]: https://github.com/CarbonCommunity/Carbon.Core/wiki
-[discord]: https://discord.gg/eXPcNKK4yd
-[documentation]: https://carboncommunity.gitbook.io/docs
-[patreon]: https://patreon.com/CarbonCommunity
+[hooks]: https://docs.carbonmod.gg/docs/core/hooks
+[discord]: https://discord.gg/carbonmod
+[documentation]: https://docs.carbonmod.gg/
+[patreon]: https://patreon.com/CarbonMod
 [production]: https://github.com/CarbonCommunity/Carbon.Core/releases/tag/production_build
 [quick-start]: https://github.com/CarbonCommunity/Carbon.QuickStart
