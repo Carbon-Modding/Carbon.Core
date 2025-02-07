@@ -13,7 +13,7 @@
 		<Reference Include="System.Xml" />
 		<Reference Include="System" />
 
-		<PackageReference Include="Lib.Harmony" Version="2.3.4" />
+		<PackageReference Include="Lib.Harmony" Version="2.3.5" />
 
 		<!-- Carbon API -->
 		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.SDK\Carbon.SDK.csproj" Private="false" Condition="!$(Product.Contains('Carbon.SDK')) and !$(Product.Contains('Carbon.Compiler'))" />
