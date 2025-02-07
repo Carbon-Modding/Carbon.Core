@@ -203,10 +203,6 @@ public class ZipDevScriptProcessor : BaseProcessor, IZipDevScriptProcessor
 
 	public class ZipDevScriptParser : Parser, IBaseProcessor.IParser
 	{
-		internal const string QuoteReplacer = "[CARBONQUOTE]";
-		internal const string Quote = "\\\"";
-		internal const string NewLineReplacer = "[CARBONNEWLINE]";
-		internal const string NewLine = "\\n";
 		internal const string Harmony = "Harmony";
 		internal const string FOOT = "FindObjectsOfType";
 
@@ -216,16 +212,6 @@ public class ZipDevScriptProcessor : BaseProcessor, IZipDevScriptProcessor
 			{
 				try
 				{
-					#region Handle Unicode & Quote Escaping
-
-					// if (input.Contains("\\u"))
-					// {
-					// 	output = Regex.Unescape(input.Replace(Quote, QuoteReplacer).Replace(NewLine, NewLineReplacer)).Replace(QuoteReplacer, Quote).Replace(NewLineReplacer, NewLine);
-					// }
-					// else output = input;
-
-					#endregion
-
 					if (input.Contains(Harmony))
 					{
 						Logger.Warn($" Warning! '{Path.GetFileNameWithoutExtension(file)}' uses Harmony. That may cause instability, use at your own discretion!");

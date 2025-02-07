@@ -148,7 +148,10 @@ public class ScriptCompilationThread : BaseThreadedJob
 				{
 					foreach (var file in OsEx.Folder.GetFilesWithExtension(directory, "dll"))
 					{
-						if (!file.Contains(name)) continue;
+						if (!file.Contains(name))
+						{
+							continue;
+						}
 						raw = OsEx.File.ReadBytes(file);
 						found = true;
 						break;
@@ -166,7 +169,6 @@ public class ScriptCompilationThread : BaseThreadedJob
 
 			using var mem = new MemoryStream(raw);
 			var processedReference = MetadataReference.CreateFromStream(mem);
-
 			references.Add(processedReference);
 			_referenceCache[name] = processedReference;
 			Logger.Debug(id, $"Added common reference '{name}'", 4);
@@ -195,7 +197,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 		var references = new List<MetadataReference>();
 		var id = Path.GetFileNameWithoutExtension(InitialSource.FilePath);
 
-		_injectReference(id, "0Harmony", references, _libraryDirectories);
+		_injectReference(id, "0Harmony", references, _libraryDirectories, true);
 
 		foreach (var item in Community.Runtime.AssemblyEx.RefWhitelist)
 		{
@@ -285,6 +287,11 @@ public class ScriptCompilationThread : BaseThreadedJob
 		{
 			try
 			{
+				if (_referenceCache.ContainsKey(reference))
+				{
+					continue;
+				}
+
 				var extensionFile = Path.Combine(Defines.GetExtensionsFolder(), $"{reference}.dll");
 				if (OsEx.File.Exists(extensionFile))
 				{
