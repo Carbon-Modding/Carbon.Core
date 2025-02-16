@@ -22,6 +22,7 @@ on:
         - rust_beta/staging
         - rust_beta/aux01
         - rust_beta/aux02
+        - rust_beta/aux03
 
       rust_branch:
         description: 'Rust Branch'
@@ -34,6 +35,7 @@ on:
         - staging
         - aux01
         - aux02
+        - aux03
 
       debug:
         description: 'Debug Hooks'
