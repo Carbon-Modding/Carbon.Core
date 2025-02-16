@@ -1,7 +1,3 @@
-###
-### Copyright (c) 2024 Carbon Community
-### All rights reserved
-###
 name: Preview Build
 concurrency: build-2-preview
 

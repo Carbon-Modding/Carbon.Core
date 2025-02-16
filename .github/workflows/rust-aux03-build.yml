@@ -1,8 +1,11 @@
-name: Production Build
-concurrency: build-1-production
+name: Rust (aux03) Build
+concurrency: build-rust-aux03
 
-on:    
+on:
   workflow_dispatch:
+
+  schedule:
+    - cron: '00 19 * * *'
 
 jobs:
   bootstrap:
@@ -24,7 +27,7 @@ jobs:
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
         with:
-          ref: production
+          ref: rust_beta/aux03
 
       - name: 📅 Prepare the environment
         id: step1
@@ -34,25 +37,25 @@ jobs:
           echo "tag=$(date +'%Yd%j')" >> $GITHUB_OUTPUT
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "wipe=$( [ $(date +%u) -eq 4 ] && [ $(date +%d) -le 7 ] && echo true || echo false )" >> $GITHUB_OUTPUT
-          echo "version=2.0.$(curl -s -L 'https://carbonmod.gg/version?id=production&token=${{secrets.VERSIONS_TOKEN}}')" >> $GITHUB_OUTPUT
+          echo "version=2.7.$(curl -s -L 'https://carbonmod.gg/version?id=aux03&token=${{secrets.VERSIONS_TOKEN}}')" >> $GITHUB_OUTPUT
 
   # BUILD LINUX ----------------------------------------------------------------
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
     runs-on: ubuntu-20.04
-    continue-on-error: false
+    continue-on-error: true
 
     outputs:
       wipe: ${{ needs.bootstrap.outputs.wipe }}
-      artifact: build-production-${{ needs.bootstrap.outputs.ref }}-linux
+      artifact: build-aux03-${{ needs.bootstrap.outputs.ref }}-linux
       build_info: Built at ${{ needs.bootstrap.outputs.date }} ${{ needs.bootstrap.outputs.clock }} based on commit ${{ needs.bootstrap.outputs.ref }}.
     
     steps:
     - name: 🔗 Checkout source code from github
       uses: actions/checkout@v3
       with:
-        ref: production
+        ref: rust_beta/aux03
         token: ${{ secrets.PAT_ALL_REPO }}
         submodules: recursive
 
@@ -68,81 +71,45 @@ jobs:
         args: -r --target x86_64-unknown-linux-gnu
         directory: Carbon.Core/Carbon.Native
         
-    - uses: dtolnay/rust-toolchain@stable
-    - uses: ClementTsang/cargo-action@v0.0.3
-      with:
-        command: build
-        args: --target x86_64-unknown-linux-gnu --profile prod
-        directory: Carbon.Core/Carbon.Native
-        
     - name: 🔨 Setup the Carbon build environment
       shell: bash
       run: |
         ${GITHUB_WORKSPACE}/Tools/Build/linux/bootstrap.sh
 
+    - name: 🔨 Setup the Carbon build environment (aux03)
+      shell: bash
+      run: |
+        ${GITHUB_WORKSPACE}/Tools/Build/linux/update_aux03.sh
+        
     - name: 🐧 Built Carbon on Linux
       shell: bash
       run: |
         export VERSION=${{ needs.bootstrap.outputs.version }}
-        ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh ReleaseUnix "PROD" "production_build"
-        ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh MinimalUnix "PROD" "production_build"
+        ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh DebugUnix RUST_AUX03 "rustbeta_aux03"
+        ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh MinimalUnix RUST_AUX03 "rustbeta_aux03"
         
     - name: ⬆️ Upload the artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-production-linux
+        name: build-aux03-linux
         path: |
-          Release/Carbon.Linux.Release.tar.gz
-          Release/Carbon.Linux.Release.info
+          Release/Carbon.Linux.Debug.tar.gz
+          Release/Carbon.Linux.Debug.info
           Release/Carbon.Linux.Minimal.tar.gz
           Release/Carbon.Linux.Minimal.info
 
-    - name: 🗑️ Delete existing previous release tag
-      uses: dev-drprasad/delete-tag-and-release@92d94d77429cb0436597047a92369526a5824f50
-      with:
-        delete_release: true
-        tag_name: productionprev_build
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: 🐧 Backup previous production build
-      shell: bash
-      run: |
-        git tag -d production_build || true
-        git tag productionprev_build || true
-        git push origin productionprev_build || true
-        git push origin :refs/tags/production_build || true
-
-    - name: Create previous production build release
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        # Get the release data associated with the old tag
-        release_data=$(curl -s -H "Authorization: token $GITHUB_TOKEN" \
-          "https://api.github.com/repos/${{ github.repository }}/releases/tags/production_build")
-        
-        # Get the release ID and upload URL from the release data
-        release_id=$(echo "$release_data" | jq -r '.id')
-        upload_url=$(echo "$release_data" | jq -r '.upload_url' | sed 's/{.*}//')
-
-        # Update the release with the new tag
-        curl -s -X PATCH -H "Authorization: token $GITHUB_TOKEN" \
-          -H "Content-Type: application/json" \
-          -d "{\"tag_name\": \"productionprev_build\", \"draft\": false, \"prerelease\": true}" \
-          "https://api.github.com/repos/${{ github.repository }}/releases/$release_id"
-          
   # BUILD WINDOWS --------------------------------------------------------------
   build-windows:
     name: 💻 Windows
     needs: bootstrap
     runs-on: windows-latest
-    continue-on-error: false
+    continue-on-error: true
     
     steps:
     - name: 🔗 Checkout source code from github
       uses: actions/checkout@v3
       with:
-        ref: production
+        ref: rust_beta/aux03
         token: ${{ secrets.PAT_ALL_REPO }}
         submodules: recursive
 
@@ -158,53 +125,49 @@ jobs:
         args: -r --target x86_64-pc-windows-msvc
         directory: Carbon.Core/Carbon.Native
         
-    - uses: dtolnay/rust-toolchain@stable
-    - uses: ClementTsang/cargo-action@v0.0.3
-      with:
-        command: build
-        args: --target x86_64-pc-windows-msvc --profile prod
-        directory: Carbon.Core/Carbon.Native
-        
     - name: 🔨 Setup the Carbon build environment
       shell: cmd
       run: |
         %GITHUB_WORKSPACE%\Tools\Build\win\bootstrap.bat
 
+    - name: 🔨 Setup the Carbon build environment (aux03)
+      shell: cmd
+      run: |
+        %GITHUB_WORKSPACE%\Tools\Build\win\update_aux03.bat
+        
     - name: 🔨 Built Carbon on Windows
       shell: cmd
       run: |
         set VERSION=${{ needs.bootstrap.outputs.version }}
-        call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Release PROD production_build
-        call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Minimal PROD production_build
+        call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Debug RUST_AUX03 rustbeta_aux03
+        call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Minimal RUST_AUX03 rustbeta_aux03
 
     - name: ⬆️ Upload the artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: build-production-windows
+        name: build-aux03-windows
         path: |
-          Release/Carbon.Windows.Release.zip
-          Release/Carbon.Windows.Release.info
+          Release/Carbon.Windows.Debug.zip
+          Release/Carbon.Windows.Debug.info
           Release/Carbon.Windows.Minimal.zip
           Release/Carbon.Windows.Minimal.info
 
-    - name: 🔨 Upload NuGet package
-      shell: cmd
-      run: | 
-        %GITHUB_WORKSPACE%\Tools\Build\win\publish_nuget.bat ${{ secrets.NUGET_API }} ${{ needs.bootstrap.outputs.version }}
 
   # RELEASE --------------------------------------------------------------------
   release-on-schedule:
-    name: 💾 Production Release
+    name: 💾 Rust (aux03) Release
     needs: [ "bootstrap", "build-linux", "build-windows" ]
     runs-on: ubuntu-latest
-    if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && needs.build-linux.outputs.wipe == 'true') }}
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    # only release if triggered by the scheduler
+    # or if manually triggered by a developer
 
     steps:
     - name: 🗑️ Delete existing release tag
       uses: dev-drprasad/delete-tag-and-release@92d94d77429cb0436597047a92369526a5824f50
       with:
         delete_release: true
-        tag_name: production_build
+        tag_name: rustbeta_aux03_build
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -215,8 +178,8 @@ jobs:
     - name: ⬇️ Download artifacts
       uses: actions/download-artifact@v4
       with:
-        path: Release/
-        
+        path: Release
+
     - name: Display structure of downloaded files
       run: ls -R
       working-directory: Release
@@ -225,25 +188,31 @@ jobs:
       uses: softprops/action-gh-release@d4e8205d7e959a9107da6396278b2f1f07af0f9b
       with:
         draft: false
-        prerelease: false
-        tag_name: production_build
-        name: 'Production Build — v${{ needs.bootstrap.outputs.version }}'
+        prerelease: true
+        tag_name: rustbeta_aux03_build
+        name: 'Rust (aux03) Build — v${{ needs.bootstrap.outputs.version }}'
         body: |
-          This is a release build of Carbon based on the `production` branch.
-          This build is targeted at the general public.
+          This is a manually triggered development build of Carbon based on the `rust_beta/aux03` branch.
+          This build might and probably will be very unstable and its sole purpose is for testing and/or exploring Rust's future update features in a modded environment.
+                  
+          This build is targeted at developers or testers.
+          The general public is advised to use one of the [stable] builds.
+          Since it's manually triggered, we're confident you should use this build to test out the latest Carbon changes.
 
           ### How to install
-          1. Download the `Carbon.[Windows|Linux].Release` archive from the attachments below.
+          1. Download the `Carbon.[Windows|Linux].Debug` archive from the attachments below.
           2. Unzip the archive to the root of your Rust Dedicated Server.
           3. Restart the server and enjoy.
           
           ${{ needs.build-linux.outputs.build_info }}
+
+          [stable]: https://github.com/CarbonCommunity/Carbon.Core/releases/latest
         files: |
-          Release/build-production-linux/Carbon.Linux.Release.info
-          Release/build-production-linux/Carbon.Linux.Release.tar.gz
-          Release/build-production-windows/Carbon.Windows.Release.info
-          Release/build-production-windows/Carbon.Windows.Release.zip
-          Release/build-production-linux/Carbon.Linux.Minimal.info
-          Release/build-production-linux/Carbon.Linux.Minimal.tar.gz
-          Release/build-production-windows/Carbon.Windows.Minimal.info
-          Release/build-production-windows/Carbon.Windows.Minimal.zip
+          Release/build-aux03-linux/Carbon.Linux.Debug.info
+          Release/build-aux03-linux/Carbon.Linux.Debug.tar.gz
+          Release/build-aux03-windows/Carbon.Windows.Debug.info
+          Release/build-aux03-windows/Carbon.Windows.Debug.zip
+          Release/build-aux03-linux/Carbon.Linux.Minimal.info
+          Release/build-aux03-linux/Carbon.Linux.Minimal.tar.gz
+          Release/build-aux03-windows/Carbon.Windows.Minimal.info
+          Release/build-aux03-windows/Carbon.Windows.Minimal.zip
