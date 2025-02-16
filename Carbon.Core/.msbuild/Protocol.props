@@ -7,6 +7,6 @@
 			carbon that forces the users to update all the compontents at the
 			same time, like updating core and hooks in one shot.
 		-->
-		<CarbonProtocol>0.0.1.0-aux02</CarbonProtocol>
+		<CarbonProtocol>0.0.1.0-aux03</CarbonProtocol>
 	</PropertyGroup>
 </Project>
