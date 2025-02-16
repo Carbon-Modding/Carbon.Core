@@ -1,7 +1,3 @@
-###
-### Copyright (c) 2024 Carbon Community 
-### All rights reserved
-###
 name: Rust (aux01) Build
 concurrency: build-rust-aux01
 
