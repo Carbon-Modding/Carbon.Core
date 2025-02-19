@@ -458,8 +458,13 @@ public class ScriptCompilationThread : BaseThreadedJob
 
 			_stopwatch.Restart();
 
-			var compilation = CSharpCompilation.Create(
-				$"Script.{InitialSource.FileName}.{Guid.NewGuid():N}", trees, references, options);
+			if (InitialSource == null)
+			{
+				Dispose();
+				return;
+			}
+			
+			var compilation = CSharpCompilation.Create($"Script.{InitialSource.FileName}.{Guid.NewGuid():N}", trees, references, options);
 
 			using (var dllStream = new MemoryStream())
 			{
