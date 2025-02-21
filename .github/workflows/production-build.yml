@@ -222,7 +222,7 @@ jobs:
       working-directory: Release
 
     - name: 🏷️ Update release tag
-      uses: softprops/action-gh-release@d4e8205d7e959a9107da6396278b2f1f07af0f9b
+      uses: softprops/action-gh-release@a92196038060e0c673cf3ba5b98710dd716731df
       with:
         draft: false
         prerelease: false
