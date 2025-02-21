@@ -463,7 +463,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 				Dispose();
 				return;
 			}
-			
+
 			var compilation = CSharpCompilation.Create($"Script.{InitialSource.FileName}.{Guid.NewGuid():N}", trees, references, options);
 
 			using (var dllStream = new MemoryStream())
