@@ -55,3 +55,6 @@
 [submodule "Carbon.Core/Carbon.Components/Carbon.Startup"]
 	path = Carbon.Core/Carbon.Components/Carbon.Startup
 	url = https://github.com/CarbonCommunity/Carbon.Startup.git
+[submodule "Carbon.Core/Carbon.Profiler"]
+	path = Carbon.Core/Carbon.Profiler
+	url = https://github.com/CarbonCommunity/Carbon.Profiler.git
