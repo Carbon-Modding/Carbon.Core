@@ -40,18 +40,16 @@ public class ScriptCompilationThread : BaseThreadedJob
 	public List<CompilerException> Exceptions = new();
 	public List<CompilerException> Warnings = new();
 
-	#region Internals
-
-	internal const string _internalCallHookPattern = @"override object InternalCallHook";
-	internal const string _partialPattern = @" partial ";
-	internal Stopwatch _stopwatch;
-	internal List<ClassDeclarationSyntax> ClassList = new();
-	internal static EmitOptions _emitOptions = new(debugInformationFormat: DebugInformationFormat.Embedded);
-	internal static ConcurrentDictionary<string, byte[]> _compilationCache = new();
-	internal static ConcurrentDictionary<string, byte[]> _extensionCompilationCache = new();
-	internal static Dictionary<string, PortableExecutableReference> _referenceCache = new();
-	internal static Dictionary<string, PortableExecutableReference> _extensionReferenceCache = new();
-	internal static readonly string[] _libraryDirectories =
+	private const string _internalCallHookPattern = @"override object InternalCallHook";
+	private const string _partialPattern = @" partial ";
+	private Stopwatch _stopwatch;
+	private List<ClassDeclarationSyntax> ClassList = new();
+	private static EmitOptions _emitOptions = new(debugInformationFormat: DebugInformationFormat.Embedded);
+	private static ConcurrentDictionary<string, byte[]> _compilationCache = new();
+	private static ConcurrentDictionary<string, byte[]> _extensionCompilationCache = new();
+	private static Dictionary<string, PortableExecutableReference> _referenceCache = new();
+	private static Dictionary<string, PortableExecutableReference> _extensionReferenceCache = new();
+	private static readonly string[] _libraryDirectories =
 	[
 		Defines.GetLibFolder(),
 		Defines.GetManagedFolder(),
@@ -60,7 +58,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 		Defines.GetExtensionsFolder()
 	];
 
-	internal static byte[] _getPlugin(string name)
+	private static byte[] _getPlugin(string name)
 	{
 		name = name.Replace(" ", string.Empty);
 
@@ -74,7 +72,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 
 		return null;
 	}
-	internal static byte[] _getExtensionPlugin(string name)
+	private static byte[] _getExtensionPlugin(string name)
 	{
 		foreach (var extension in _extensionCompilationCache)
 		{
@@ -86,7 +84,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 
 		return null;
 	}
-	internal static void _overridePlugin(string name, byte[] pluginAssembly)
+	private static void _overridePlugin(string name, byte[] pluginAssembly)
 	{
 		name = name.Replace(" ", "");
 
@@ -102,7 +100,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 		Array.Clear(plugin, 0, plugin.Length);
 		try { _compilationCache[name] = pluginAssembly; } catch { }
 	}
-	internal static void _overrideExtensionPlugin(string name, byte[] pluginAssembly)
+	private static void _overrideExtensionPlugin(string name, byte[] pluginAssembly)
 	{
 		if (pluginAssembly == null) return;
 
@@ -130,7 +128,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 			_referenceCache[correctedName] = PortableExecutableReference.CreateFromStream(stream);
 		}
 	}
-	internal void _injectReference(string id, string name, List<MetadataReference> references, string[] directories, bool direct = false, bool allowCache = true)
+	private void _injectReference(string id, string name, List<MetadataReference> references, string[] directories, bool direct = false, bool allowCache = true)
 	{
 		if (allowCache && _referenceCache.TryGetValue(name, out var reference))
 		{
@@ -174,7 +172,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 			Logger.Debug(id, $"Added common reference '{name}'", 4);
 		}
 	}
-	internal void _injectExtensionReference(string name, List<MetadataReference> references)
+	private void _injectExtensionReference(string name, List<MetadataReference> references)
 	{
 		if (_extensionReferenceCache.TryGetValue(name, out var reference))
 		{
@@ -192,7 +190,7 @@ public class ScriptCompilationThread : BaseThreadedJob
 			_extensionReferenceCache.Add(name, processedReference);
 		}
 	}
-	internal List<MetadataReference> _addReferences()
+	private List<MetadataReference> _addReferences()
 	{
 		var references = new List<MetadataReference>();
 		var id = Path.GetFileNameWithoutExtension(InitialSource.FilePath);
@@ -242,8 +240,6 @@ public class ScriptCompilationThread : BaseThreadedJob
 
 		return references;
 	}
-
-	#endregion
 
 	public class CompilerException : Exception
 	{
