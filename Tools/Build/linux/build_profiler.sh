@@ -38,7 +38,7 @@ dotnet   build "${ROOT}/Carbon.Core" -v:m --configuration ${TARGET} --no-restore
 
 echo "** Copy operating system specific files"
 mkdir -p "${ROOT}/Release/.tmp/${TARGET}/profiler/native"
-cp "{ROOT}/Release/.tmp/${TARGET}/carbon/managed/Carbon.Profiler.dll" 	"{ROOT}/Release/.tmp/${TARGET}/profiler/Carbon.Profiler.dll"
+cp "${ROOT}/Release/.tmp/${TARGET}/carbon/managed/Carbon.Profiler.dll" 	"{ROOT}/Release/.tmp/${TARGET}/profiler/Carbon.Profiler.dll"
 if [[ "${TARGET}" == *"Unix"* ]]; then
 	cp "${ROOT}/Carbon.Core/Carbon.Native/target/x86_64-unknown-linux-gnu/${CARGO_TARGET}/libCarbonNative.so" 	"${ROOT}/Release/.tmp/${TARGET}/profiler/native/libCarbonNative.so"
 else
