@@ -48,8 +48,6 @@ dotnet   build "%BUILD_ROOT%\Carbon.Core" -v:m --configuration %BUILD_TARGET% --
 	/p:UserConstants=\"%2\" /p:UserVersion="%VERSION%" || exit /b
 
 echo ** Copy operating system specific files
-mkdir "%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\native"
-copy /y "%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\managed\Carbon.Profiler.dll" 									"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\Carbon.Profiler.dll"
 echo "%BUILD_TARGET%" | findstr /C:"Unix" >NUL && (
 	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-unknown-linux-gnu\%CARGO_TARGET%\libCarbonNative.so"	"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\native\libCarbonNative.so"
 	(CALL )
