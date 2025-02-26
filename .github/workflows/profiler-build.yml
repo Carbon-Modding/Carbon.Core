@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
           export VERSION=${{ needs.bootstrap.outputs.version }}
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/build_profiler.sh ReleaseUnix UNIX
+          ${GITHUB_WORKSPACE}/Tools/Build/linux/build_profiler.sh ReleaseUnix UNIX;HARMONYMOD
 
       - name: ⬆️ Upload the artifacts
         uses: actions/upload-artifact@v4
@@ -116,7 +116,7 @@ jobs:
         shell: cmd
         run: |
           set VERSION=${{ needs.bootstrap.outputs.version }}
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build_profiler.bat Release
+          call %GITHUB_WORKSPACE%\Tools\Build\win\build_profiler.bat Release HARMONYMOD
 
       - name: ⬆️ Upload the artifacts
         uses: actions/upload-artifact@v4
