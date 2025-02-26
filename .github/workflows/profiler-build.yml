@@ -63,6 +63,24 @@ jobs:
           args: -r --target x86_64-unknown-linux-gnu
           directory: Carbon.Core/Carbon.Native
 
+      - name: 🔨 Setup the Carbon build environment
+        shell: bash
+        run: |
+          ${GITHUB_WORKSPACE}/Tools/Build/linux/bootstrap.sh
+
+      - name: 🐧 Built Carbon on Linux
+        shell: bash
+        run: |
+          export VERSION=${{ needs.bootstrap.outputs.version }}
+          ${GITHUB_WORKSPACE}/Tools/Build/linux/build_profiler.sh ReleaseUnix
+
+      - name: ⬆️ Upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-develop-linux
+          path: |
+            Release/Carbon.Linux.Profiler.tar.gz
+            
   # BUILD WINDOWS --------------------------------------------------------------
   build-windows:
     name: 💻 Windows
@@ -98,8 +116,7 @@ jobs:
         shell: cmd
         run: |
           set VERSION=${{ needs.bootstrap.outputs.version }}
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build_profiler.bat Release WIN
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build_profiler.bat ReleaseUnix UNIX
+          call %GITHUB_WORKSPACE%\Tools\Build\win\build_profiler.bat Release
 
       - name: ⬆️ Upload the artifacts
         uses: actions/upload-artifact@v4
@@ -107,7 +124,6 @@ jobs:
           name: build-develop-windows
           path: |
             Release/Carbon.Windows.Profiler.zip
-            Release/Carbon.Linux.Profiler.tar.gz
 
   # RELEASE --------------------------------------------------------------------
   release-on-commit:
@@ -156,4 +172,4 @@ jobs:
             ${{ needs.build-linux.outputs.build_info }}
           files: |
             Release/build-develop-windows/Carbon.Windows.Profiler.zip     
-            Release/build-develop-windows/Carbon.Linux.Profiler.tar.gz     
+            Release/build-develop-linux/Carbon.Linux.Profiler.tar.gz     
