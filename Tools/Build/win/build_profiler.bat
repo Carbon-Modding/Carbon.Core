@@ -78,5 +78,5 @@ echo "%BUILD_TARGET%" | findstr /C:"Unix" >NUL && (
 
 if "%2" NEQ "--no-archive" (
 	echo ** Create the compressed archive 'Carbon.%TOS%.Profiler.zip'
-	pwsh -Command "Compress-Archive -Update -Path '%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler' -DestinationPath '%BUILD_ROOT%\Release\Carbon.%TOS%.Profiler.zip'"
+	pwsh -Command "Compress-Archive -Update -Path '%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\*' -DestinationPath '%BUILD_ROOT%\Release\Carbon.%TOS%.Profiler.zip'"
 )
