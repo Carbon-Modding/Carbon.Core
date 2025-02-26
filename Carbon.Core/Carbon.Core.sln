@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carbon.Test", "Carbon.Compo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Startup", "Carbon.Components\Carbon.Startup\Carbon.Startup.csproj", "{10CF4F1A-61BB-4D8E-B8D0-50C9336CE449}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Profiler", "Carbon.Profiler\Carbon.Profiler.csproj", "{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -361,6 +363,30 @@ Global
 		{10CF4F1A-61BB-4D8E-B8D0-50C9336CE449}.ReleaseUnix|Any CPU.Build.0 = ReleaseUnix|x64
 		{10CF4F1A-61BB-4D8E-B8D0-50C9336CE449}.ReleaseUnix|x64.ActiveCfg = ReleaseUnix|x64
 		{10CF4F1A-61BB-4D8E-B8D0-50C9336CE449}.ReleaseUnix|x64.Build.0 = ReleaseUnix|x64
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Debug|x64.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.DebugUnix|Any CPU.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.DebugUnix|Any CPU.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.DebugUnix|x64.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.DebugUnix|x64.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Minimal|Any CPU.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Minimal|Any CPU.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Minimal|x64.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Minimal|x64.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.MinimalUnix|Any CPU.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.MinimalUnix|Any CPU.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.MinimalUnix|x64.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.MinimalUnix|x64.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Release|x64.ActiveCfg = Release|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.Release|x64.Build.0 = Release|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.ReleaseUnix|Any CPU.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.ReleaseUnix|Any CPU.Build.0 = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.ReleaseUnix|x64.ActiveCfg = Debug|Any CPU
+		{98186F05-0AE2-4585-AF5F-F2E8C2F4C563}.ReleaseUnix|x64.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
