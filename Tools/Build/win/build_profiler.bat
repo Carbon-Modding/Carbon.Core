@@ -16,7 +16,7 @@ call "%~dp0publish_git.bat" %3
 echo ** Set the build target config to %BUILD_TARGET%
 
 echo ** Cleanup the release folder
-rmdir /s /q "%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%" 2>NUL
+rmdir /s /q "%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler" 2>NUL
 del /q "%BUILD_ROOT%\Release\Carbon.%BUILD_TARGET%.Profiler.zip" 2>NUL
 
 if "%DEFINES%" EQU "" (
@@ -48,10 +48,12 @@ dotnet   build "%BUILD_ROOT%\Carbon.Core" -v:m --configuration %BUILD_TARGET% --
 	/p:UserConstants=\"%2\" /p:UserVersion="%VERSION%" || exit /b
 
 echo ** Copy operating system specific files
+mkdir "%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\native"
+copy /y "%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\carbon\managed\Carbon.Profiler.dll" 									"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler"
 echo "%BUILD_TARGET%" | findstr /C:"Unix" >NUL && (
 	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-unknown-linux-gnu\%CARGO_TARGET%\libCarbonNative.so"	"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\native\libCarbonNative.so"
-	(CALL )				
-) || (                                                                  				                                                        
+	(CALL )
+) || (
 	copy /y "%BUILD_ROOT%\Carbon.Core\Carbon.Native\target\x86_64-pc-windows-msvc\%CARGO_TARGET%\CarbonNative.dll"		"%BUILD_ROOT%\Release\.tmp\%BUILD_TARGET%\profiler\native\CarbonNative.dll"
 	(CALL )
 )

@@ -12,7 +12,7 @@ TARGET=${1:-Debug}
 echo "** Set the build target config to ${TARGET}"
 
 echo "** Cleanup the release folder"
-rm -rf "${ROOT}/Release/.tmp/${TARGET}" "${ROOT}/Release/Carbon.${TARGET}.Profiler.tar.gz" || exit 0
+rm -rf "${ROOT}/Release/.tmp/${TARGET}/profiler" "${ROOT}/Release/Carbon.${TARGET}.Profiler.tar.gz" || exit 0
 
 if [[ "${DEFINES}" == "" ]]; then
 	DEFINES=${2}
