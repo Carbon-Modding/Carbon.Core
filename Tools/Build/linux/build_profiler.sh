@@ -1,41 +1,63 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-OCD=$(pwd)
+set -e
 
-cd "$(dirname "$0")/../../.."
-BUILD_ROOT=$(pwd)
+echo "** Get the base path of the script"
+BASE="$(cd -- "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
+ROOT="$(realpath "${BASE}/../../../")"
 
-if [ -z "$1" ]; then
-    BUILD_TARGET="Release"
+"${BASE}/publish_git.sh" ${3}
+
+TARGET=${1:-Debug}
+echo "** Set the build target config to ${TARGET}"
+
+echo "** Cleanup the release folder"
+rm -rf "${ROOT}/Release/.tmp/${TARGET}" "${ROOT}/Release/Carbon.${TARGET}.Profiler.tar.gz" || exit 0
+
+if [[ "${DEFINES}" == "" ]]; then
+	DEFINES=${2}
+fi
+
+if [[ "${DEFINES}" == "" ]]; then
+	echo "** No defines."
 else
-    BUILD_TARGET="$1"
+	echo "** Defines: ${DEFINES}"
 fi
 
-if [ -z "$DEFINES" ]; then
-    DEFINES="$2"
-fi
-
-if [ -z "$DEFINES" ]; then
-    echo "** No defines."
+if [[ "${TARGET}" == "Debug" || "${TARGET}" == "DebugUnix" || "${TARGET}" == "Minimal" || "${TARGET}" == "MinimalUnix" ]]; then
+	CARGO_TARGET="release"
 else
-    echo "** Defines: $DEFINES"
+	CARGO_TARGET="prod"
 fi
 
-dotnet restore "$BUILD_ROOT/Carbon.Core" -v:m --nologo || exit 1
-dotnet clean "$BUILD_ROOT/Carbon.Core" -v:m --configuration "$BUILD_TARGET" --nologo || exit 1
-dotnet build "$BUILD_ROOT/Carbon.Core" -v:m --configuration "$BUILD_TARGET" --no-restore --no-incremental \
-    -p:UserConstants="$DEFINES" -p:UserVersion="$VERSION" || exit 1
-
-CARGO_TARGET=release
+echo "** Build the solution"
+dotnet restore "${ROOT}/Carbon.Core" -v:m --nologo
+dotnet   clean "${ROOT}/Carbon.Core" -v:m --configuration ${TARGET} --nologo
+dotnet   build "${ROOT}/Carbon.Core" -v:m --configuration ${TARGET} --no-restore --no-incremental \
+	/p:UserConstants="${DEFINES}" /p:UserVersion="${VERSION}"
 
 echo "** Copy operating system specific files"
-if [[ "$BUILD_TARGET" == *"Unix"* ]]; then
-    cp -f "$BUILD_ROOT/Carbon.Core/Carbon.Native/target/x86_64-unknown-linux-gnu/$CARGO_TARGET/libCarbonNative.so" \
-        "$BUILD_ROOT/Release/.tmp/$BUILD_TARGET/profiler/native/libCarbonNative.so"
+if [[ "${TARGET}" == *"Unix"* ]]; then
+	cp "${ROOT}/Carbon.Core/Carbon.Native/target/x86_64-unknown-linux-gnu/${CARGO_TARGET}/libCarbonNative.so" 	"${ROOT}/Release/.tmp/${TARGET}/profiler/native/libCarbonNative.so"
 else
-    cp -f "$BUILD_ROOT/Carbon.Core/Carbon.Native/target/x86_64-pc-windows-msvc/$CARGO_TARGET/CarbonNative.dll" \
-        "$BUILD_ROOT/Release/.tmp/$BUILD_TARGET/profiler/native/CarbonNative.dll"
+	cp "${ROOT}/Carbon.Core/Carbon.Native/target/x86_64-pc-windows-msvc/${CARGO_TARGET}/CarbonNative.dll" 		"${ROOT}/Release/.tmp/${TARGET}/profiler/native/CarbonNative.dll"
 fi
 
-echo "** Create the compressed archive 'Carbon.Linux.Profiler.$EXT'"
-pwsh -Command "Compress-Archive -Update -Path '$BUILD_ROOT/Release/.tmp/$BUILD_TARGET/profiler/*' -DestinationPath '$BUILD_ROOT/Release/Carbon.Linux.Profiler.tar.gz'"
+if [[ "${TARGET}" == *"Unix" ]]; then
+	if [[ "${TARGET}" == "Debug"* ]]; then
+		TOS=Linux
+	else
+		TOS=Linux
+	fi
+else
+	if [[ "${TARGET}" == "Debug"* ]]; then
+		TOS=Windows
+	else
+		TOS=Windows
+	fi
+fi
+
+if [ "${2}" != "--no-archive" ]; then
+	echo "** Create the compressed archive"
+	tar -zcvf "${ROOT}/Release/Carbon.${TOS}.Profiler.tar.gz" -C "${ROOT}/Release/.tmp/${TARGET}" $(ls -A ${ROOT}/Release/.tmp/${TARGET})
+fi
