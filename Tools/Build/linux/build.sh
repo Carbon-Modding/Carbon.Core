@@ -78,6 +78,8 @@ else
 fi
 
 if [ "${2}" != "--no-archive" ]; then
+	rm -rf "${ROOT}/Release/.tmp/${TARGET}/profiler"
+
 	echo "** Create the compressed archive"
 	tar -zcvf "${ROOT}/Release/Carbon.${TOS}.${TAG}.tar.gz" -C "${ROOT}/Release/.tmp/${TARGET}" $(ls -A ${ROOT}/Release/.tmp/${TARGET})
 fi

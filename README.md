@@ -11,6 +11,7 @@
     <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/rustbeta_aux01_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/rust-aux01-build.yml/badge.svg" /></a>
     <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/rustbeta_aux02_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/rust-aux02-build.yml/badge.svg" /></a>
   <br />
+  <a href="https://github.com/CarbonCommunity/Carbon/releases/tag/profiler_build"><img src="https://github.com/CarbonCommunity/Carbon/actions/workflows/profiler-build.yml/badge.svg" /></a>
   <a href="https://github.com/CarbonCommunity/Carbon/blob/develop/LICENSE"><img alt="GitHub" src="https://img.shields.io/github/license/CarbonCommunity/Carbon" /></a>
   <a href="https://www.nuget.org/packages/Carbon.Community"><img alt="NuGet" src="https://img.shields.io/nuget/v/Carbon.Community.svg" /></a>
   <a href="https://github.com/GameServerManagers/LinuxGSM/releases/latest"><img src="https://img.shields.io/badge/LinuxGSM-v23.2.0-informational" /></a>

@@ -1,11 +1,8 @@
-name: Rust (Staging) Build
-concurrency: build-rust-staging
+name: Profiler Build
+concurrency: build-3-profiler
 
 on:
   workflow_dispatch:
-
-  schedule:
-    - cron: "00 19 * * *"
 
 jobs:
   bootstrap:
@@ -17,7 +14,6 @@ jobs:
       clock: ${{ steps.step1.outputs.clock }}
       tag: ${{ steps.step1.outputs.tag }}
       ref: ${{ steps.step1.outputs.ref }}
-      wipe: ${{ steps.step1.outputs.wipe }}
       version: ${{ steps.step1.outputs.version }}
 
     steps:
@@ -26,36 +22,32 @@ jobs:
 
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
-        with:
-          ref: rust_beta/staging
-
+              
       - name: 📅 Prepare the environment
         id: step1
+        shell: bash
         run: |
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
           echo "clock=$(date +'%H:%M:%S')" >> $GITHUB_OUTPUT
           echo "tag=$(date +'%Yd%j')" >> $GITHUB_OUTPUT
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-          echo "wipe=$( [ $(date +%u) -eq 4 ] && [ $(date +%d) -le 7 ] && echo true || echo false )" >> $GITHUB_OUTPUT
-          echo "version=2.3.$(curl -s -L 'https://carbonmod.gg/version?id=staging&token=${{secrets.VERSIONS_TOKEN}}')" >> $GITHUB_OUTPUT
+          echo "version=2.8.$(curl -s -L 'https://carbonmod.gg/version?id=profiler&token=${{secrets.VERSIONS_TOKEN}}')" >> $GITHUB_OUTPUT
 
   # BUILD LINUX ----------------------------------------------------------------
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
     runs-on: ubuntu-20.04
-    continue-on-error: true
+    continue-on-error: false
 
     outputs:
-      wipe: ${{ needs.bootstrap.outputs.wipe }}
-      artifact: build-staging-${{ needs.bootstrap.outputs.ref }}-linux
+      artifact: build-develop-${{ needs.bootstrap.outputs.ref }}-linux
       build_info: Built at ${{ needs.bootstrap.outputs.date }} ${{ needs.bootstrap.outputs.clock }} based on commit ${{ needs.bootstrap.outputs.ref }}.
 
     steps:
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
         with:
-          ref: rust_beta/staging
           token: ${{ secrets.PAT_ALL_REPO }}
           submodules: recursive
 
@@ -68,7 +60,7 @@ jobs:
       - uses: ClementTsang/cargo-action@v0.0.3
         with:
           command: build
-          args: -r --target x86_64-unknown-linux-gnu
+          args: --target x86_64-unknown-linux-gnu --profile prod
           directory: Carbon.Core/Carbon.Native
 
       - name: 🔨 Setup the Carbon build environment
@@ -76,40 +68,30 @@ jobs:
         run: |
           ${GITHUB_WORKSPACE}/Tools/Build/linux/bootstrap.sh
 
-      - name: 🔨 Setup the Carbon build environment (Staging)
-        shell: bash
-        run: |
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/update_staging.sh
-
       - name: 🐧 Built Carbon on Linux
         shell: bash
         run: |
           export VERSION=${{ needs.bootstrap.outputs.version }}
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh DebugUnix RUST_STAGING "rustbeta_staging"
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh MinimalUnix RUST_STAGING "rustbeta_staging"
+          ${GITHUB_WORKSPACE}/Tools/Build/linux/build_profiler.sh ReleaseUnix HARMONYMOD
 
       - name: ⬆️ Upload the artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-staging-linux
+          name: build-develop-linux
           path: |
-            Release/Carbon.Linux.Debug.tar.gz
-            Release/Carbon.Linux.Debug.info
-            Release/Carbon.Linux.Minimal.tar.gz
-            Release/Carbon.Linux.Minimal.info
-
+            Release/Carbon.Linux.Profiler.tar.gz
+            
   # BUILD WINDOWS --------------------------------------------------------------
   build-windows:
     name: 💻 Windows
     needs: bootstrap
     runs-on: windows-latest
-    continue-on-error: true
+    continue-on-error: false
 
     steps:
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
         with:
-          ref: rust_beta/staging
           token: ${{ secrets.PAT_ALL_REPO }}
           submodules: recursive
 
@@ -122,51 +104,39 @@ jobs:
       - uses: ClementTsang/cargo-action@v0.0.3
         with:
           command: build
-          args: -r --target x86_64-pc-windows-msvc
+          args: --target x86_64-pc-windows-msvc --profile prod
           directory: Carbon.Core/Carbon.Native
-
+          
       - name: 🔨 Setup the Carbon build environment
         shell: cmd
         run: |
           %GITHUB_WORKSPACE%\Tools\Build\win\bootstrap.bat
 
-      - name: 🔨 Setup the Carbon build environment (Staging)
-        shell: cmd
-        run: |
-          %GITHUB_WORKSPACE%\Tools\Build\win\update_staging.bat
-
       - name: 🔨 Built Carbon on Windows
         shell: cmd
         run: |
           set VERSION=${{ needs.bootstrap.outputs.version }}
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Debug RUST_STAGING rustbeta_staging
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Minimal RUST_STAGING rustbeta_staging
+          call %GITHUB_WORKSPACE%\Tools\Build\win\build_profiler.bat Release HARMONYMOD
 
       - name: ⬆️ Upload the artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-staging-windows
+          name: build-develop-windows
           path: |
-            Release/Carbon.Windows.Debug.zip
-            Release/Carbon.Windows.Debug.info
-            Release/Carbon.Windows.Minimal.zip
-            Release/Carbon.Windows.Minimal.info
+            Release/Carbon.Windows.Profiler.zip
 
   # RELEASE --------------------------------------------------------------------
-  release-on-schedule:
-    name: 💾 Rust (Staging) Release
+  release-on-commit:
+    name: 💾 Profiler Release
     needs: ["bootstrap", "build-linux", "build-windows"]
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-    # only release if triggered by the scheduler
-    # or if manually triggered by a developer
 
     steps:
       - name: 🗑️ Delete existing release tag
         uses: dev-drprasad/delete-tag-and-release@92d94d77429cb0436597047a92369526a5824f50
         with:
           delete_release: true
-          tag_name: rustbeta_staging_build
+          tag_name: profiler_build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -188,30 +158,18 @@ jobs:
         with:
           draft: false
           prerelease: true
-          tag_name: rustbeta_staging_build
-          name: "Rust (Staging) Build — v${{ needs.bootstrap.outputs.version }}"
+          tag_name: profiler_build
+          name: "Profiler Build — v${{ needs.bootstrap.outputs.version }}"
           body: |
-            This is a manually triggered development build of Carbon based on the `rust_beta/staging` branch.
-            This build might and probably will be very unstable and its sole purpose is for testing and/or exploring Rust's future update features in a modded environment.
-                    
-            This build is targeted at developers or testers.
-            The general public is advised to use one of the [stable] builds.
-            Since it's manually triggered, we're confident you should use this build to test out the latest Carbon changes.
+            This is an out-of-the-box build of the Carbon.Profiler dedicated to be working on vanilla and/or Oxide servers.
+            Run `find carbon` upon server boot to get further command instructions.
 
             ### How to install
-            1. Download the `Carbon.[Windows|Linux].Debug` archive from the attachments below.
-            2. Unzip the archive to the root of your Rust Dedicated Server.
-            3. Restart the server and enjoy.
+            1. Download the `Carbon.[Windows|Linux].Profiler` archive from the attachments below.
+            2. Unzip the archive to the HarmonyMods directory of your Rust Dedicated Server.
+            3. Start the server and enjoy, or run `harmony.load Carbon.Profiler`.
 
             ${{ needs.build-linux.outputs.build_info }}
-
-            [stable]: https://github.com/CarbonCommunity/Carbon.Core/releases/latest
           files: |
-            Release/build-staging-linux/Carbon.Linux.Debug.info
-            Release/build-staging-linux/Carbon.Linux.Debug.tar.gz
-            Release/build-staging-windows/Carbon.Windows.Debug.info
-            Release/build-staging-windows/Carbon.Windows.Debug.zip
-            Release/build-staging-linux/Carbon.Linux.Minimal.info
-            Release/build-staging-linux/Carbon.Linux.Minimal.tar.gz
-            Release/build-staging-windows/Carbon.Windows.Minimal.info
-            Release/build-staging-windows/Carbon.Windows.Minimal.zip
+            Release/build-develop-windows/Carbon.Windows.Profiler.zip     
+            Release/build-develop-linux/Carbon.Linux.Profiler.tar.gz     
