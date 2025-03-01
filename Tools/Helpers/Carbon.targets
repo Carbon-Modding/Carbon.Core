@@ -11,21 +11,26 @@
         <CarbonManagedLibPath>$(CarbonManagedPath)/lib</CarbonManagedLibPath>
     </PropertyGroup>
     <ItemGroup>
-			  <Reference Include="$(RustServerManagedPath)/*" >
+		<Reference Include="$(RustServerManagedPath)/*">
           <Private>false</Private>
         </Reference>
-        <Reference Include="$(RustPatchedManagedPath)/*" >
+        <Reference Include="$(RustPatchedManagedPath)/*">
           <Private>false</Private>
         </Reference>
-        <Reference Include="$(CarbonManagedPath)/Carbon.SDK.dll" >
+        <Reference Include="$(CarbonManagedPath)/Carbon.SDK.dll">
             <Private>false</Private>
         </Reference>
-        <Reference Include="$(CarbonManagedPath)/Carbon.Common.dll" >
+        <Reference Include="$(CarbonManagedPath)/Carbon.Test.dll">
             <Private>false</Private>
         </Reference>
-        <Reference Include="$(CarbonManagedPath)/Carbon.dll" >
+        <Reference Include="$(CarbonManagedPath)/Carbon.Profiler.dll">
             <Private>false</Private>
         </Reference>
-        <Reference Remove="$(RustServerManagedPath)/Unity.Burst.Cecil.dll" />
+        <Reference Include="$(CarbonManagedPath)/Carbon.Common.dll">
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="$(CarbonManagedPath)/Carbon.dll">
+            <Private>false</Private>
+        </Reference>
     </ItemGroup>
 </Project>
