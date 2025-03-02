@@ -19,13 +19,13 @@
 		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.SDK\Carbon.SDK.csproj" Private="false" Condition="!$(Product.Contains('Carbon.SDK')) and !$(Product.Contains('Carbon.Compiler'))" />
 
 		<!-- Roslyn -->
-		<PackageReference Include="Roslynator.CSharp" Version="4.12.7" />
-		<PackageReference Include="ICSharpCode.Decompiler" Version="8.2.0.7535" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.11.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.11.0" />
+		<PackageReference Include="Roslynator.CSharp" Version="4.13.1" />
+		<PackageReference Include="ICSharpCode.Decompiler" Version="9.0.0.7889" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.13.0" />
 		<PackageReference Include="SharpCompress" Version="0.32.2" />
 		<PackageReference Include="ZstdSharp.Port" Version="0.8.0" />
-		<PackageReference Include="Mono.Cecil" Version="0.11.5" />
+		<PackageReference Include="Mono.Cecil" Version="0.11.6" />
 		<PackageReference Update="Microsoft.Unity.Analyzers" Version="1.19.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
