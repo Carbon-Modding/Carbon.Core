@@ -7,7 +7,7 @@ on:
 jobs:
   bootstrap:
     name: 🥾 Bootstrap
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     outputs:
       date:    ${{ steps.step1.outputs.date }}
@@ -40,7 +40,7 @@ jobs:
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     continue-on-error: false
 
     outputs:
@@ -196,7 +196,7 @@ jobs:
   release-on-schedule:
     name: 💾 Production Release
     needs: [ "bootstrap", "build-linux", "build-windows" ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: ${{ (github.event_name == 'push') || (github.event_name == 'workflow_dispatch') || (github.event_name == 'schedule' && needs.build-linux.outputs.wipe == 'true') }}
 
     steps:
