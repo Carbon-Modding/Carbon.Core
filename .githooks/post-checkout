@@ -15,5 +15,5 @@ BOOTSTRAP_ROOT=$(pwd)
 
 for P in "Carbon.Core/Carbon.Components/Carbon.Bootstrap" "Carbon.Core/Carbon.Components/Carbon.Common" "Carbon.Core/Carbon.Components/Carbon.Compat" "Carbon.Core/Carbon.Components/Carbon.Modules" "Carbon.Core/Carbon.Components/Carbon.Preloader" "Carbon.Core/Carbon.Components/Carbon.SDK" "Carbon.Core/Carbon.Hooks/Carbon.Hooks.Base" "Carbon.Core/Carbon.Hooks/Carbon.Hooks.Oxide" "Carbon.Core/Carbon.Hooks/Carbon.Hooks.Community"; do
     cd "$BOOTSTRAP_ROOT/Carbon.Core/$P"
-    git checkout "${new_branch}" || true
+	git fetch origin "${new_branch}" && git checkout --track "origin/${new_branch}" || git checkout -b "${new_branch}" "origin/${new_branch}" || true
 done
