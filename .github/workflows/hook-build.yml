@@ -68,7 +68,7 @@ env:
 jobs:
   bootstrap:
     name: 🥾 Bootstrap
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: 🔗 Checkout source code from github

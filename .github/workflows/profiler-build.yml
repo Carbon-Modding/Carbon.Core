@@ -7,7 +7,7 @@ on:
 jobs:
   bootstrap:
     name: 🥾 Bootstrap
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     outputs:
       date: ${{ steps.step1.outputs.date }}
@@ -37,7 +37,7 @@ jobs:
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     continue-on-error: false
 
     outputs:
@@ -129,7 +129,7 @@ jobs:
   release-on-commit:
     name: 💾 Profiler Release
     needs: ["bootstrap", "build-linux", "build-windows"]
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
 
     steps:
       - name: 🗑️ Delete existing release tag
