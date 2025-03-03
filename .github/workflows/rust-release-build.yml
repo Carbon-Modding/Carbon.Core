@@ -23,6 +23,8 @@ jobs:
 
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
+        with:
+          ref: rust_beta/release
           
       - name: 📅 Prepare the environment
         id: step1
@@ -50,6 +52,7 @@ jobs:
     - name: 🔗 Checkout source code from github
       uses: actions/checkout@v3
       with:
+        ref: rust_beta/release
         token: ${{ secrets.PAT_ALL_REPO }}
         submodules: recursive
 
@@ -113,6 +116,7 @@ jobs:
     - name: 🔗 Checkout source code from github
       uses: actions/checkout@v3
       with:
+        ref: rust_beta/release
         token: ${{ secrets.PAT_ALL_REPO }}
         submodules: recursive
 
@@ -197,7 +201,7 @@ jobs:
         tag_name: rustbeta_release_build
         name: 'Rust (Release) Build — v${{ needs.bootstrap.outputs.version }}'
         body: |
-          This is a manually triggered development build of Carbon based on the `develop` branch.
+          This is a manually triggered development build of Carbon based on the `rust_beta/release` branch.
           This build is polished and production-ready, and is the equivalent of what's to come in the upcoming `production` branch.
 
           ### How to install
