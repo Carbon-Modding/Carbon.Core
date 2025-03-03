@@ -10,7 +10,7 @@ on:
 jobs:
   bootstrap:
     name: 🥾 Bootstrap
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     outputs:
       date:    ${{ steps.step1.outputs.date }}
@@ -43,7 +43,7 @@ jobs:
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     continue-on-error: true
 
     outputs:
@@ -157,7 +157,7 @@ jobs:
   release-on-schedule:
     name: 💾 Rust (aux02) Release
     needs: [ "bootstrap", "build-linux", "build-windows" ]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
     # only release if triggered by the scheduler
     # or if manually triggered by a developer
