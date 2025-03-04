@@ -3,6 +3,7 @@
 		<Product>Carbon.Publicizer</Product>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
+		<RollForward>LatestMajor</RollForward>
 		<Configurations>Debug;Release;ReleaseUnix;DebugUnix;Minimal;MinimalUnix</Configurations>
 	</PropertyGroup>
 
