@@ -8,17 +8,9 @@
 		<TargetFramework>net8.0</TargetFramework>
 	</PropertyGroup>
 
-	<Import Project="$(SolutionDir)\.msbuild\References.props" />
-	<Import Project="$(SolutionDir)\.msbuild\Configurations.props" />
-
 	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.Common\Carbon.Common.csproj" />
-		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.SDK\Carbon.SDK.csproj" />
 	</ItemGroup>
 
 	<PropertyGroup>
@@ -27,6 +19,11 @@
 		<NoWarn>NU1701</NoWarn>
 		<NoWarn>NU1702</NoWarn>
 	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.Common\Carbon.Common.csproj" />
+		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.SDK\Carbon.SDK.csproj" />
+	</ItemGroup>
 
 	<Target Name="CustomRelease" AfterTargets="Build" DependsOnTargets="PrepareRelease">
 		<Copy SourceFiles="$(c_managed)\Carbon.SDK.dll" DestinationFolder="$(OutputPath)" />
