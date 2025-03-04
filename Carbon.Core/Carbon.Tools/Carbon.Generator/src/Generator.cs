@@ -20,10 +20,10 @@ public sealed class Generator
 				"DEBUG"
 			});
 
-			var syntaxTrees = OsEx.Folder.GetFilesWithExtension(Program.Arguments.PluginInput, "cs", SearchOption.TopDirectoryOnly).Select(file =>
+			var syntaxTrees = Directory.GetFiles(Program.Arguments.PluginInput, "*.cs", SearchOption.TopDirectoryOnly).Select(file =>
 			{
 				Console.Write($"  {Path.GetFileName(file)}");
-				var code = CSharpSyntaxTree.ParseText(OsEx.File.ReadText(file), options);
+				var code = CSharpSyntaxTree.ParseText(File.ReadAllText(file), options);
 				Console.Write(" done.\n");
 
 				return code;
@@ -65,7 +65,7 @@ public sealed class Generator
 				var typeNameParts = group.Key.Split('_');
 				var classSyntax = SyntaxFactory.ClassDeclaration($" {typeNameParts[1]}").WithMembers(SyntaxFactory.List(group.Value));
 				var namespaceSyntax = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(typeNameParts[0].Replace("_", "."))).AddMembers(classSyntax);
-				mergedMembers.Add(namespaceSyntax.Members[^1]);
+				mergedMembers.Add(namespaceSyntax.Members[namespaceSyntax.Members.Count - 1]);
 			}
 
 			var compilationUnit = SyntaxFactory.CompilationUnit();

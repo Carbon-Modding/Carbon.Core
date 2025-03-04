@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Carbon.Core;
 using Carbon.Utilities;
 using Startup;
 
@@ -9,12 +8,17 @@ public sealed class Program
 {
 	public static void Main(string[] args)
 	{
-		Config.Init();
+		Config.Singleton ??= new();
+		Config.Singleton.ForceEnsurePublicizedAssembly("Assembly-CSharp.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Facepunch.Console.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Facepunch.Network.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Facepunch.Nexus.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Rust.Clans.Local.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Rust.Harmony.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Rust.Global.dll");
+		Config.Singleton.ForceEnsurePublicizedAssembly("Rust.Data.dll");
 
-		Console.WriteLine(Defines.GetRustRootFolder());
-		Console.WriteLine(Defines.GetRustManagedFolder());
-
-		var input = Facepunch.CommandLine.GetSwitch("-input", string.Empty);
+		var input = args[1];
 		var patchableFiles = Directory.EnumerateFiles(input);
 
 		Patch.Init();
@@ -27,19 +31,22 @@ public sealed class Program
 
 				if (patch != null && patch.Execute())
 				{
-					patch.Write(file);
-					continue;
-				}
-
-				if (!Config.Singleton.Publicizer.PublicizedAssemblies.Any(x => name.StartsWith(x, StringComparison.OrdinalIgnoreCase)))
-				{
+					using var memoryStream = new MemoryStream();
+					patch.assembly.Write(memoryStream);
+					patch.processed = memoryStream.ToArray();
+					File.WriteAllBytes(file, patch.processed);
+					Console.WriteLine($"Patched {file}");
 					continue;
 				}
 
 				patch = new Patch(Path.GetDirectoryName(file), name);
 				if (patch.Execute())
 				{
-					patch.Write(file);
+					using var memoryStream = new MemoryStream();
+					patch.assembly.Write(memoryStream);
+					patch.processed = memoryStream.ToArray();
+					File.WriteAllBytes(file, patch.processed);
+					Console.WriteLine($"Patched {file}");
 				}
 			}
 			catch (Exception ex)
