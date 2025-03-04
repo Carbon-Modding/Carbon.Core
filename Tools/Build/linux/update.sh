@@ -24,7 +24,7 @@ dotnet clean   "${ROOT}/Carbon.Core" --configuration Debug
 dotnet build   "${ROOT}/Carbon.Core" --configuration Debug
 
 for OS in windows linux; do
-	"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Publicizer/bin/Debug/net8.0/Carbon.Publicizer.exe" \
+	"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Publicizer/bin/x64/Debug/net8.0/Carbon.Publicizer.exe" \
 		-input "${ROOT}/Rust/${OS}/RustDedicated_Data/Managed" -carbon.rustrootdir "${ROOT}/Rust/${OS}" -carbon.logdir "${ROOT}/Rust/${OS}"
 done
 
@@ -32,14 +32,14 @@ dotnet restore "${ROOT}/Carbon.Core"
 dotnet clean   "${ROOT}/Carbon.Core" --configuration Debug
 dotnet build   "${ROOT}/Carbon.Core" --configuration Debug
 
-"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Generator/bin/Debug/Carbon.Generator.exe" \
+"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Generator/bin/x64/Debug/net8.0/Carbon.Generator.exe" \
 	--plugininput "${ROOT}/Carbon.Core/Carbon.Components/Carbon.Common/src/Carbon/Core" \
 	--pluginoutput "${ROOT}/Carbon.Core/Carbon.Components/Carbon.Common/src/Carbon/Core/Core.Plugin-Generated.cs"
 
 for MODULE in "${ROOT}/Carbon.Core/Carbon.Components/Carbon.Common/src/Carbon/Modules/"*; do
 	if [ -d "${MODULE}" ] 
 	then
-	"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Generator/bin/Debug/Carbon.Generator.exe" \
+	"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Generator/bin/x64/Debug/net8.0/Carbon.Generator.exe" \
 		--plugininput "${MODULE}" \
 		--pluginoutput "${MODULE}/$(basename "${MODULE}")-Generated.cs" \
 		--pluginname "$(basename "${MODULE}")" \
@@ -51,7 +51,7 @@ done
 for MODULE in "${ROOT}/Carbon.Core/Carbon.Components/Carbon.Modules/src/"*; do
 	if [ -d "${MODULE}" ] 
 	then
-	"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Generator/bin/Debug/Carbon.Generator.exe" \
+	"${ROOT}/Carbon.Core/Carbon.Tools/Carbon.Generator/bin/x64/Debug/net8.0/Carbon.Generator.exe" \
 		--plugininput "${MODULE}" \
 		--pluginoutput "${MODULE}/$(basename "${MODULE}")-Generated.cs" \
 		--pluginname "$(basename "${MODULE}")" \

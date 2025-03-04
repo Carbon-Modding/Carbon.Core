@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
-	<Import Project="$(SolutionDir)\.msbuild\ReferencesRust.props" />
-
 	<PropertyGroup>
 		<Product>Carbon.Generator</Product>
 		<OutputType>Exe</OutputType>
 		<TargetFramework>net8.0</TargetFramework>
+		<Configurations>Debug;Release;ReleaseUnix;DebugUnix;Minimal;MinimalUnix</Configurations>
 	</PropertyGroup>
+
+	<Import Project="$(SolutionDir)\.msbuild\ReferencesRust.props" />
 
 	<Choose>
 		<When Condition="$(Configuration.Contains('Release'))">
@@ -81,15 +82,11 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<WarningsAsErrors>false</WarningsAsErrors>
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-		<NoWarn>NU1701</NoWarn>
-		<NoWarn>NU1702</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.Common\Carbon.Common.csproj" />
-		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.SDK\Carbon.SDK.csproj" />
 	</ItemGroup>
 
 	<Target Name="CustomRelease" AfterTargets="Build">
