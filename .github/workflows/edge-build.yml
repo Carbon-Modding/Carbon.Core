@@ -45,7 +45,7 @@ jobs:
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
-    runs-on: debian-bullseye
+    runs-on: ubuntu-22.04
     continue-on-error: false
 
     outputs:
