@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
+	<Import Project="$(SolutionDir)\.msbuild\Common.props" />
+
+	<PropertyGroup>
+		<Product>Carbon.Generator</Product>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommandLineParser" Version="2.9.1" />
+		<PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.Common\Carbon.Common.csproj" />
+	</ItemGroup>
+</Project>

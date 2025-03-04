@@ -1,0 +1,16 @@
+{
+	"script": {
+		"enabled": true,
+		"defaultTargetFramework": "net48",
+		"enableScriptNuGetReferences": true
+	},
+	"RoslynExtensionsOptions": {
+		"EnableAnalyzersSupport": true,
+		"EnableDecompilationSupport": true,
+		"LocationPaths": []
+	},
+	"FormattingOptions": {
+		"TabSize": 4,
+		"UseTabs": true
+	}
+}
