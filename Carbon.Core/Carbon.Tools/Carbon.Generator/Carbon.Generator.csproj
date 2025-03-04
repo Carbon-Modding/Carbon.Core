@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
-	<Import Project="$(SolutionDir)\.msbuild\Common.props" />
 	<Import Project="$(SolutionDir)\.msbuild\ReferencesRust.props" />
 
 	<PropertyGroup>
@@ -25,9 +24,6 @@
 		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.SDK\Carbon.SDK.csproj" />
 	</ItemGroup>
 
-	<Target Name="CustomRelease" AfterTargets="Build" DependsOnTargets="PrepareRelease">
-		<Copy SourceFiles="$(c_managed)\Carbon.SDK.dll" DestinationFolder="$(OutputPath)" />
-		<Copy SourceFiles="$(SolutionDir)..\Rust\$(OperatingSystem)\RustDedicated_Data\Managed\Newtonsoft.Json.dll" DestinationFolder="$(OutputPath)" />
-		<Copy SourceFiles="$(SolutionDir)..\Rust\$(OperatingSystem)\RustDedicated_Data\Managed\Facepunch.System.dll" DestinationFolder="$(OutputPath)" />
+	<Target Name="CustomRelease" AfterTargets="Build">
 	</Target>
 </Project>
