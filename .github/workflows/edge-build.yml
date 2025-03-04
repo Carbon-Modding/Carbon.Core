@@ -64,17 +64,11 @@ jobs:
         with:
           dotnet-version: 8.0.x
 
-      - name: Install musl-tools
-        run: sudo apt-get update && sudo apt-get install -y musl-tools
-
-      - name: Install Rust target for musl
-        run: rustup target add x86_64-unknown-linux-musl
-
-      - name: Build with musl
-        uses: ClementTsang/cargo-action@v0.0.3
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ClementTsang/cargo-action@v0.0.3
         with:
           command: build
-          args: -r --target x86_64-unknown-linux-musl
+          args: -r --target x86_64-unknown-linux-gnu
           directory: Carbon.Core/Carbon.Native
 
       - name: 🔨 Setup the Carbon build environment
