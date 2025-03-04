@@ -8,6 +8,8 @@
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 	</PropertyGroup>
 
+	<Import Project="$(SolutionDir)\.msbuild\ReferencesRust.props" />
+
 	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 		<PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />

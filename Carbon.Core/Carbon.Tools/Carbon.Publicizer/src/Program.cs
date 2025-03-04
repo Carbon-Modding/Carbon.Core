@@ -2,7 +2,6 @@
 using System.IO;
 using System.Linq;
 using Carbon.Core;
-using Carbon.Extensions;
 using Carbon.Utilities;
 using Startup;
 
@@ -15,7 +14,7 @@ public sealed class Program
 		Console.WriteLine(Defines.GetRustRootFolder());
 		Console.WriteLine(Defines.GetRustManagedFolder());
 
-		var input = CommandLineEx.GetArgumentResult("-input");
+		var input = Facepunch.CommandLine.GetSwitch("-input", string.Empty);
 		var patchableFiles = Directory.EnumerateFiles(input);
 
 		Patch.Init();
