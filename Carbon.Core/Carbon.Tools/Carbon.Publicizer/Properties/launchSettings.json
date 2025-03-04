@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Carbon.Publicizer": {
+      "commandName": "Project",
+      "commandLineArgs": "+standalone +game \"D:\\Work\\Repositories\\raulssorban\\Carbon.Core\\Rust\\windows\""
+    }
+  }
+}
