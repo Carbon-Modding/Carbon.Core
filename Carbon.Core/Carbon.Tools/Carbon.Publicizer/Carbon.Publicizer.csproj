@@ -8,8 +8,74 @@
 
 	<Import Project="$(SolutionDir)\.msbuild\References.props" />
 	<Import Project="$(SolutionDir)\.msbuild\ReferencesRust.props" />
-	<Import Project="$(SolutionDir)\.msbuild\Configurations.props" />
-	<Import Project="$(SolutionDir)\.msbuild\Tasks.targets" />
+
+	<Choose>
+		<When Condition="$(Configuration.Contains('Release'))">
+			<PropertyGroup>
+				<DebugType>embedded</DebugType>
+				<DebugSymbols>true</DebugSymbols>
+				<DefineConstants>$(DefineConstants)</DefineConstants>
+				<Optimize>true</Optimize>
+				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+				<!-- We want to override corelib to have the new lang features -->
+				<WarningsNotAsErrors>CS1685</WarningsNotAsErrors>
+				<NoWarn>CS1685;CS7035;CS1522;CS0618;CS0162</NoWarn>
+
+				<!-- -->
+				<ConfigurationNormalized>Release</ConfigurationNormalized>
+			</PropertyGroup>
+		</When>
+		<When Condition="$(Configuration.Contains('Minimal'))">
+			<PropertyGroup>
+				<DebugType>embedded</DebugType>
+				<DebugSymbols>true</DebugSymbols>
+				<DefineConstants>MINIMAL;$(DefineConstants)</DefineConstants>
+				<Optimize>true</Optimize>
+				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+				<!-- We want to override corelib to have the new lang features -->
+				<WarningsNotAsErrors>CS1685</WarningsNotAsErrors>
+				<NoWarn>CS1685;CS7035;CS1522;CS0618;CS0162</NoWarn>
+
+				<!-- -->
+				<ConfigurationNormalized>Minimal</ConfigurationNormalized>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<!-- Changed due to FP_73186 changeset -->
+				<DebugType>embedded</DebugType>
+				<DebugSymbols>true</DebugSymbols>
+				<DefineConstants>DEBUG;UNITY_ASSERTIONS;$(DefineConstants)</DefineConstants>
+				<Optimize>false</Optimize>
+				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+
+				<!-- We want to override corelib to have the new lang features -->
+				<NoWarn>CS1685;CS7035;CS1522;CS0618;CS0162</NoWarn>
+
+				<!-- -->
+				<ConfigurationNormalized>Debug</ConfigurationNormalized>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
+
+	<Choose>
+		<When Condition="$(Configuration.Contains('Unix'))">
+			<PropertyGroup>
+				<DefineConstants>UNIX;$(DefineConstants);$(UserConstants)</DefineConstants>
+				<OperatingSystemCapitalized>Linux</OperatingSystemCapitalized>
+				<OperatingSystem>linux</OperatingSystem>
+			</PropertyGroup>
+		</When>
+		<Otherwise>
+			<PropertyGroup>
+				<DefineConstants>WIN;$(DefineConstants);$(UserConstants)</DefineConstants>
+				<OperatingSystemCapitalized>Windows</OperatingSystemCapitalized>
+				<OperatingSystem>windows</OperatingSystem>
+			</PropertyGroup>
+		</Otherwise>
+	</Choose>
 
 	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
@@ -24,8 +90,7 @@
 		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 	</PropertyGroup>
 
-	<Target Name="CustomRelease" AfterTargets="Build" DependsOnTargets="PrepareRelease">
-		<Copy SourceFiles="$(c_managed)\Carbon.SDK.dll" DestinationFolder="$(OutputPath)" />
+	<Target Name="CustomRelease" AfterTargets="PostBuild">
 		<Copy SourceFiles="$(SolutionDir)..\Rust\$(OperatingSystem)\RustDedicated_Data\Managed\Newtonsoft.Json.dll" DestinationFolder="$(OutputPath)" />
 		<Copy SourceFiles="$(SolutionDir)..\Rust\$(OperatingSystem)\RustDedicated_Data\Managed\Facepunch.System.dll" DestinationFolder="$(OutputPath)" />
 	</Target>
