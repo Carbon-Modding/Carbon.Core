@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using Carbon.Runner.Executors;
 using Microsoft.CodeAnalysis;
@@ -25,11 +24,11 @@ public class InternalRunner
 	public static string PathEnquotes(params string[] paths) => $"\"{Path(paths)}\"";
 
 	public static bool HasArgs(int minArgs) => GlobalArgs.Length >= minArgs;
-	public static string GetArg(int index)
+	public static string GetArg(int index, string defaultValue = null)
 	{
 		if (index >= GlobalArgs.Length)
 		{
-			return string.Empty;
+			return defaultValue;
 		}
 		return GlobalArgs[index];
 	}
@@ -115,7 +114,7 @@ public class _Runner : Carbon.Runner.InternalRunner
 				}
 				Warn($" {diagnostic.Severity}|{diagnostic.Id}  {diagnostic.GetMessage()}");
 			}
-
+			Exit(1);
 			return;
 		}
 

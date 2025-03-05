@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 
 public sealed class Publicizer
 {
@@ -38,14 +35,14 @@ public sealed class Publicizer
 		SaveToDisk();
 	}
 
-	internal void Start()
+	private void Start()
 	{
-		AssemblyNameReference scope =
-			_assembly.MainModule.AssemblyReferences.OrderByDescending(a => a.Version).FirstOrDefault(a => a.Name == "mscorlib");
+		AssemblyNameReference scope = _assembly.MainModule.AssemblyReferences.OrderByDescending(a => a.Version).FirstOrDefault(a => a.Name == "mscorlib");
 
-		MethodReference ctor = new MethodReference(".ctor", _assembly.MainModule.TypeSystem.Void,
-			declaringType: new TypeReference("System", "NonSerializedAttribute", _assembly.MainModule, scope))
-		{ HasThis = true };
+		MethodReference ctor = new MethodReference(".ctor", _assembly.MainModule.TypeSystem.Void, declaringType: new TypeReference("System", "NonSerializedAttribute", _assembly.MainModule, scope))
+		{
+			HasThis = true
+		};
 
 		Console.Write("Publicize process start.. ");
 
@@ -55,7 +52,7 @@ public sealed class Publicizer
 		Console.WriteLine("Done");
 	}
 
-	internal static void Publicize(TypeDefinition type, MethodReference ctor)
+	private static void Publicize(TypeDefinition type, MethodReference ctor)
 	{
 		foreach (TypeDefinition childType in type.NestedTypes)
 			Publicize(childType, ctor);
@@ -95,7 +92,7 @@ public sealed class Publicizer
 		}
 	}
 
-	internal void SaveToDisk()
+	private void SaveToDisk()
 	{
 		try
 		{
