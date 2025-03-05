@@ -4,7 +4,6 @@
 ### Copyright (c) 2022-2023 Carbon Community 
 ### All rights reserved
 ###
-set -e
 
 BASE="$(cd -- "$(dirname "$0")" >/dev/null 2>&1; pwd -P)"
 ROOT="$(realpath "${BASE}/../../../")"
