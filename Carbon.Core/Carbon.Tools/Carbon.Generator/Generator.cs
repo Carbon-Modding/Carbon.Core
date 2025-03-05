@@ -20,7 +20,7 @@ public sealed class Generator
 			{
 				Console.Write($"  {Path.GetFileName(file)}");
 				var code = CSharpSyntaxTree.ParseText(File.ReadAllText(file), options);
-				Console.Write(" done.\n");
+				Console.WriteLine(" done.");
 
 				return code;
 			});
