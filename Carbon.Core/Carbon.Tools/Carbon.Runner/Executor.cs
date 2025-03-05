@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Microsoft.CodeAnalysis;
 
 namespace Carbon.Runner;
 
@@ -25,12 +26,23 @@ public class _Runner : Carbon.Runner.InternalRunner
 		}}
 		catch(Exception ex)
 		{{
-			Console.WriteLine($""{{ex.Message}}\n{{ex.StackTrace}}"");
+			Error($""{{ex.Message}}\n{{ex.StackTrace}}"");
 		}}
 	}}
 }}";
 	}
 
-	public static Assembly? FindAssembly(string name) => AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.GetName().Name!.Equals(name, StringComparison.OrdinalIgnoreCase));
+	public static void RegisterReference(List<MetadataReference> references, string name)
+	{
+		var assembly = AppDomain.CurrentDomain.GetAssemblies().FirstOrDefault(x => x.GetName().Name!.Equals(name, StringComparison.OrdinalIgnoreCase));
+
+		if (assembly == null)
+		{
+			InternalRunner.Error($"Couldn't register reference: {name}");
+			return;
+		}
+
+		references.Add(MetadataReference.CreateFromFile(assembly.Location));
+	}
 
 }

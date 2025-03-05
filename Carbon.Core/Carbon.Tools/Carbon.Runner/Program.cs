@@ -9,7 +9,7 @@ var file = args[1];
 
 if (!File.Exists(file))
 {
-	Console.WriteLine($"Runner file {file} not found");
+	InternalRunner.Error($"Runner file '{file}' not found");
 	return;
 }
 
@@ -22,19 +22,16 @@ var options = new CSharpCompilationOptions(
 	deterministic: true, warningLevel: 4,
 	allowUnsafe: true
 );
-var references = new List<MetadataReference>
-{
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Private.CoreLib")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Runtime")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Collections.Immutable")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Collections")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Console")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Threading")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Memory")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("System.Linq")!.Location),
-	MetadataReference.CreateFromFile(Executor.FindAssembly("Carbon.Runner")!.Location)
+var references = new List<MetadataReference>();
+Executor.RegisterReference(references, "System.Private.CoreLib");
+Executor.RegisterReference(references, "System.Runtime");
+Executor.RegisterReference(references, "System.Collections.Immutable");
+Executor.RegisterReference(references, "System.Collections");
+Executor.RegisterReference(references, "System.Threading");
+Executor.RegisterReference(references, "System.Memory");
+Executor.RegisterReference(references, "System.Linq");
+Executor.RegisterReference(references, "Carbon.Runner");
 
-};
 var compilation = CSharpCompilation.Create($"{Guid.NewGuid():N}", trees, references, options);
 using var dllStream = new MemoryStream();
 var emit = compilation.Emit(dllStream, options: new EmitOptions(debugInformationFormat: DebugInformationFormat.Embedded));
@@ -52,7 +49,6 @@ if (!emit.Success)
 
 	return;
 }
-Console.WriteLine("Runner compiled successfully");
 
 var assembly = Assembly.Load(dllStream.ToArray());
 var runner = assembly.GetType("_Runner");
