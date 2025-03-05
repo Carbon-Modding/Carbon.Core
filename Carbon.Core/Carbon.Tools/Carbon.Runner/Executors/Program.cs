@@ -29,7 +29,7 @@ public class Program : Executor
 		}
 	}
 	[Expose("Starts and runs a program and returns the output string")]
-	public override async ValueTask<string> RunOutput(params string[] args)
+	public override string RunOutput(params string[] args)
 	{
 		var output = string.Empty;
 		try
@@ -46,12 +46,12 @@ public class Program : Executor
 			});
 
 			using (var reader = process!.StandardOutput)
-			{
-				output += await reader.ReadToEndAsync();
+			{	
+				output += reader.ReadToEnd();
 			}
 			using (var reader = process!.StandardError)
 			{
-				output += await reader.ReadToEndAsync();
+				output += reader.ReadToEnd();
 			}
 			process!.WaitForExit();
 		}

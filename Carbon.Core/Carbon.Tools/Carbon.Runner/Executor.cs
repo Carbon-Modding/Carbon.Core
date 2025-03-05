@@ -12,10 +12,10 @@ public abstract class Executor
 	{
 		InternalRunner.Warn($"Executor {Name}.Run(..) runner is not implemented!");
 	}
-	public virtual ValueTask<string> RunOutput(params string[] args)
+	public virtual string? RunOutput(params string[] args)
 	{
 		InternalRunner.Warn($"Executor {Name}.Run(..) runner is not implemented!");
-		return default;
+		return null;
 	}
 
 	public void Log(object message)
