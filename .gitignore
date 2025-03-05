@@ -15,6 +15,7 @@
 *.csproj.user
 
 # Code gen
+[Bb]uild.cs
 [Gg]enerated/
 [Tt]ools/Runtime
 

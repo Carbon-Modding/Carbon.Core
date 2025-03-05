@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Carbon.CodeGen": {
-      "commandName": "Project",
-      "commandLineArgs": "--coreplugininput \"D:\\Work\\Repositories\\raulssorban\\Carbon.Core\\Carbon.Core\\Carbon.Common\\src\\Carbon\\Core\" --corepluginoutput \"potat.cs\""
-    }
-  }
-}
