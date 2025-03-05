@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Publicizer", "Carbon
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Generator", "Carbon.Tools\Carbon.Generator\Carbon.Generator.csproj", "{EDB9021B-9267-49E2-B1CA-4CA756854684}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Carbon.Generator.Shared", "Carbon.Tools\Carbon.Generator.Shared\Carbon.Generator.Shared.shproj", "{05275584-550B-440B-86C5-8D76E490DCD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -460,8 +462,14 @@ Global
 		{10CF4F1A-61BB-4D8E-B8D0-50C9336CE449} = {31982314-60E6-4740-98FC-2FCDDFB5E35A}
 		{03407DF6-33A8-4803-8C28-B16753281553} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{EDB9021B-9267-49E2-B1CA-4CA756854684} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{05275584-550B-440B-86C5-8D76E490DCD2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28C89D3B-47B2-45D4-88D4-08EE9E94E67A}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Carbon.Tools\Carbon.Generator.Shared\Carbon.Generator.Shared.projitems*{05275584-550b-440b-86c5-8d76e490dcd2}*SharedItemsImports = 13
+		Carbon.Tools\Carbon.Generator.Shared\Carbon.Generator.Shared.projitems*{531a79e2-9d4e-4c69-b277-d668f515c209}*SharedItemsImports = 5
+		Carbon.Tools\Carbon.Generator.Shared\Carbon.Generator.Shared.projitems*{edb9021b-9267-49e2-b1ca-4ca756854684}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

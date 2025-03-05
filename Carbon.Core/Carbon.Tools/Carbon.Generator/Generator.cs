@@ -72,7 +72,7 @@ public sealed class Generator
 
 			classes.AddRange(nameSpace2.Members.OfType<ClassDeclarationSyntax>());
 
-			HookCaller.GenerateInternalCallHook(compilationUnit, out var output, out var method, out var isPartial, Arguments.BaseCall, Arguments.BaseName, classList: classes);
+			Carbon.Generator.InternalCallHook.Generate(compilationUnit, out var output, out var method, out var isPartial, Arguments.BaseCall, Arguments.BaseName, classList: classes);
 
 			var prettyFormat = $@"{string.Join("\n", usings.Select(x => x.ToString()).Distinct())}
 
