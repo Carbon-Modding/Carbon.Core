@@ -5,9 +5,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
-    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-      <NoWarn>1701;1702;CS8618;CS8601</NoWarn>
-    </PropertyGroup>
     
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />

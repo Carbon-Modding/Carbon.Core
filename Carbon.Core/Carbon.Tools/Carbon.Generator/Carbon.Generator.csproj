@@ -1,95 +1,13 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" DefaultTargets="Build">
-	<PropertyGroup>
-		<Product>Carbon.Generator</Product>
-		<OutputType>Exe</OutputType>
-		<TargetFramework>net8.0</TargetFramework>
-		<RollForward>LatestMajor</RollForward>
-		<Configurations>Debug;Release;ReleaseUnix;DebugUnix;Minimal;MinimalUnix</Configurations>
-	</PropertyGroup>
-
-	<Import Project="$(SolutionDir)\.msbuild\ReferencesRust.props" />
-
-	<Choose>
-		<When Condition="$(Configuration.Contains('Release'))">
-			<PropertyGroup>
-				<DebugType>embedded</DebugType>
-				<DebugSymbols>true</DebugSymbols>
-				<DefineConstants>$(DefineConstants)</DefineConstants>
-				<Optimize>true</Optimize>
-				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-
-				<!-- We want to override corelib to have the new lang features -->
-				<WarningsNotAsErrors>CS1685</WarningsNotAsErrors>
-				<NoWarn>CS1685;CS7035;CS1522;CS0618;CS0162</NoWarn>
-
-				<!-- -->
-				<ConfigurationNormalized>Release</ConfigurationNormalized>
-			</PropertyGroup>
-		</When>
-		<When Condition="$(Configuration.Contains('Minimal'))">
-			<PropertyGroup>
-				<DebugType>embedded</DebugType>
-				<DebugSymbols>true</DebugSymbols>
-				<DefineConstants>MINIMAL;$(DefineConstants)</DefineConstants>
-				<Optimize>true</Optimize>
-				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-
-				<!-- We want to override corelib to have the new lang features -->
-				<WarningsNotAsErrors>CS1685</WarningsNotAsErrors>
-				<NoWarn>CS1685;CS7035;CS1522;CS0618;CS0162</NoWarn>
-
-				<!-- -->
-				<ConfigurationNormalized>Minimal</ConfigurationNormalized>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<!-- Changed due to FP_73186 changeset -->
-				<DebugType>embedded</DebugType>
-				<DebugSymbols>true</DebugSymbols>
-				<DefineConstants>DEBUG;UNITY_ASSERTIONS;$(DefineConstants)</DefineConstants>
-				<Optimize>false</Optimize>
-				<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-
-				<!-- We want to override corelib to have the new lang features -->
-				<NoWarn>CS1685;CS7035;CS1522;CS0618;CS0162</NoWarn>
-
-				<!-- -->
-				<ConfigurationNormalized>Debug</ConfigurationNormalized>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-
-	<Choose>
-		<When Condition="$(Configuration.Contains('Unix'))">
-			<PropertyGroup>
-				<DefineConstants>UNIX;$(DefineConstants);$(UserConstants)</DefineConstants>
-				<OperatingSystemCapitalized>Linux</OperatingSystemCapitalized>
-				<OperatingSystem>linux</OperatingSystem>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<DefineConstants>WIN;$(DefineConstants);$(UserConstants)</DefineConstants>
-				<OperatingSystemCapitalized>Windows</OperatingSystemCapitalized>
-				<OperatingSystem>windows</OperatingSystem>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
-		<PackageReference Include="System.Reflection.Emit.ILGeneration" Version="4.7.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-	</PropertyGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="$(SolutionDir)\Carbon.Components\Carbon.Common\Carbon.Common.csproj" />
-	</ItemGroup>
-
-	<Target Name="CustomRelease" AfterTargets="Build">
-	</Target>
 </Project>

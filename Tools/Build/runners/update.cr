@@ -22,3 +22,7 @@ void DownloadRustFiles(string platform)
 		"-carbon.rustrootdir", PathEnquotes(Home, "Rust", platform),
 		"-carbon.logdir", PathEnquotes(Home, "Rust", platform));
 }
+
+DotNet.Run("run", "--project", PathEnquotes(Home, "Carbon.Core", "Carbon.Tools", "Carbon.Generator"),
+	"--plugininput", PathEnquotes(Home, "Carbon.Core", "Carbon.Components", "Carbon.Common", "src", "Carbon", "Core"),
+	"--pluginoutput", PathEnquotes(Home, "Carbon.Core", "Carbon.Components", "Carbon.Common", "src", "Carbon", "Core", "Core.Plugin-Generated.cs"));

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Carbon;
-using Carbon.Extensions;
+﻿using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 public sealed class Generator
 {
+	public static CommandLineArguments Arguments;
+
 	public static void Generate()
 	{
 		try
@@ -20,7 +16,7 @@ public sealed class Generator
 				"DEBUG"
 			});
 
-			var syntaxTrees = Directory.GetFiles(Program.Arguments.PluginInput, "*.cs", SearchOption.TopDirectoryOnly).Select(file =>
+			var syntaxTrees = Directory.GetFiles(Arguments.PluginInput, "*.cs", SearchOption.TopDirectoryOnly).Select(file =>
 			{
 				Console.Write($"  {Path.GetFileName(file)}");
 				var code = CSharpSyntaxTree.ParseText(File.ReadAllText(file), options);
@@ -76,19 +72,18 @@ public sealed class Generator
 
 			classes.AddRange(nameSpace2.Members.OfType<ClassDeclarationSyntax>());
 
-			HookCaller.GenerateInternalCallHook(compilationUnit, out var output, out var method, out var isPartial, Program.Arguments.BaseCall, Program.Arguments.BaseName, classList: classes);
+			HookCaller.GenerateInternalCallHook(compilationUnit, out var output, out var method, out var isPartial, Arguments.BaseCall, Arguments.BaseName, classList: classes);
 
-			var prettyFormat = $@"{usings.Select(x => x.ToString()).Distinct().ToString("\n")}
+			var prettyFormat = $@"{string.Join("\n", usings.Select(x => x.ToString()).Distinct())}
 
-namespace {Program.Arguments.PluginNamespace};
+namespace {Arguments.PluginNamespace};
 
-public partial class {Program.Arguments.PluginName}
+public partial class {Arguments.PluginName}
 {{
 {method.ToFullString()}
 }}";
 
-			OsEx.File.Create(Program.Arguments.PluginOutput, CSharpSyntaxTree.ParseText(prettyFormat, options, string.Empty, Encoding.UTF8).GetCompilationUnitRoot().NormalizeWhitespace().ToFullString());
-
+			File.WriteAllText(Arguments.PluginOutput, CSharpSyntaxTree.ParseText(prettyFormat, options, string.Empty, Encoding.UTF8).GetCompilationUnitRoot().NormalizeWhitespace().ToFullString());
 		}
 		catch (Exception ex)
 		{
