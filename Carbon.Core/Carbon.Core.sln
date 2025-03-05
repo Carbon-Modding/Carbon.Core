@@ -43,6 +43,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Generator", "Carbon.
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Carbon.Generator.Shared", "Carbon.Tools\Carbon.Generator.Shared\Carbon.Generator.Shared.shproj", "{05275584-550B-440B-86C5-8D76E490DCD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carbon.Runner", "Carbon.Tools\Carbon.Runner\Carbon.Runner.csproj", "{DC3EAC3F-D092-CD65-D011-07A670EEC466}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -443,6 +445,30 @@ Global
 		{EDB9021B-9267-49E2-B1CA-4CA756854684}.ReleaseUnix|Any CPU.Build.0 = Debug|Any CPU
 		{EDB9021B-9267-49E2-B1CA-4CA756854684}.ReleaseUnix|x64.ActiveCfg = Debug|Any CPU
 		{EDB9021B-9267-49E2-B1CA-4CA756854684}.ReleaseUnix|x64.Build.0 = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Debug|x64.Build.0 = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.DebugUnix|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.DebugUnix|Any CPU.Build.0 = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.DebugUnix|x64.ActiveCfg = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.DebugUnix|x64.Build.0 = Debug|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Minimal|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Minimal|Any CPU.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Minimal|x64.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Minimal|x64.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.MinimalUnix|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.MinimalUnix|Any CPU.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.MinimalUnix|x64.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.MinimalUnix|x64.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Release|x64.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.Release|x64.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.ReleaseUnix|Any CPU.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.ReleaseUnix|Any CPU.Build.0 = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.ReleaseUnix|x64.ActiveCfg = Release|Any CPU
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466}.ReleaseUnix|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -463,6 +489,7 @@ Global
 		{03407DF6-33A8-4803-8C28-B16753281553} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{EDB9021B-9267-49E2-B1CA-4CA756854684} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{05275584-550B-440B-86C5-8D76E490DCD2} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{DC3EAC3F-D092-CD65-D011-07A670EEC466} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {28C89D3B-47B2-45D4-88D4-08EE9E94E67A}
