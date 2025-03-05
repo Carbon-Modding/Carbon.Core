@@ -15,7 +15,7 @@ on:
 jobs:
   bootstrap:
     name: 🥾 Bootstrap
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     outputs:
       date: ${{ steps.step1.outputs.date }}
@@ -45,7 +45,7 @@ jobs:
   build-linux:
     name: 🐧 Linux
     needs: bootstrap
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     continue-on-error: false
 
     outputs:
@@ -145,7 +145,7 @@ jobs:
   release-on-commit:
     name: 💾 Edge Release
     needs: ["bootstrap", "build-linux", "build-windows"]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: 🗑️ Delete existing release tag
