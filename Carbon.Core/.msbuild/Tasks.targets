@@ -95,7 +95,7 @@
 	<!--
 		Outputs the build info to a file
 	-->
-	<Target Name="BuildVersionMetadata" AfterTargets="Release">
+	<Target Name="BuildVersionMetadata" AfterTargets="Release" Condition="Exists('$(SolutionDir).tmp\.gitbranch')">
 		<PropertyGroup>
 			<GitCommitBranch>$([System.IO.File]::ReadAllText('$(SolutionDir).tmp\.gitbranch').Trim())</GitCommitBranch>
 			<GitCommitHashLong>$([System.IO.File]::ReadAllText('$(SolutionDir).tmp\.gitchl').Replace("--long", "").Trim())</GitCommitHashLong>
@@ -127,7 +127,6 @@
 }
 			</InfoContents>
 		</PropertyGroup>
-
 		<WriteLinesToFile File="$(SolutionDir)\..\Release\Carbon.$(OperatingSystemCapitalized).$(ConfigurationNormalized).info" Overwrite="true" Lines="$(InfoContents)" Condition="$(Product.Contains('Carbon.SDK'))" />
 	</Target>
 </Project>

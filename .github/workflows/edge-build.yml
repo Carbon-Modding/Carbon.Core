@@ -62,7 +62,7 @@ jobs:
       - name: 🛤️ Setup the dotnet build environment
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.200
 
       - uses: dtolnay/rust-toolchain@stable
       - uses: ClementTsang/cargo-action@v0.0.3
@@ -110,7 +110,7 @@ jobs:
       - name: 🛤️ Setup the dotnet build environment
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 8.0.x
+          dotnet-version: 9.0.200
 
       - uses: dtolnay/rust-toolchain@stable
       - uses: ClementTsang/cargo-action@v0.0.3
