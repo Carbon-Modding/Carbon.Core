@@ -8,7 +8,11 @@ public abstract class Executor
 	public void SetQuiet(bool wants) => IsQuiet = wants;
 
 	public virtual string? Name => null;
-	public virtual ValueTask Run(params string[] args)
+	public virtual void Run(params string[] args)
+	{
+		InternalRunner.Warn($"Executor {Name}.Run(..) runner is not implemented!");
+	}
+	public virtual ValueTask<string> RunOutput(params string[] args)
 	{
 		InternalRunner.Warn($"Executor {Name}.Run(..) runner is not implemented!");
 		return default;
