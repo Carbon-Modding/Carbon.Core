@@ -71,6 +71,13 @@ jobs:
           command: build
           args: -r --target x86_64-unknown-linux-gnu
           directory: Carbon.Core/Carbon.Native
+          
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ClementTsang/cargo-action@v0.0.3
+        with:
+          command: build
+          args: -r --target x86_64-pc-windows-gnu
+          directory: Carbon.Core/Carbon.Native
 
       - name: 🔨 Setup the Carbon build environment
         shell: bash
@@ -81,7 +88,9 @@ jobs:
         shell: bash
         run: |
           export VERSION=${{ needs.bootstrap.outputs.version }}
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Debug EDGE edge_build
           dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr DebugUnix EDGE edge_build
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Minimal EDGE edge_build
           dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr MinimalUnix EDGE edge_build
 
       - name: ⬆️ Upload the artifacts
@@ -93,59 +102,15 @@ jobs:
             Release/Carbon.Linux.Debug.info
             Release/Carbon.Linux.Minimal.tar.gz
             Release/Carbon.Linux.Minimal.info
-
-  # BUILD WINDOWS --------------------------------------------------------------
-  build-windows:
-    name: 💻 Windows
-    needs: bootstrap
-    runs-on: windows-latest
-    continue-on-error: false
-
-    steps:
-      - name: 🔗 Checkout source code from github
-        uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PAT_ALL_REPO }}
-          submodules: recursive
-
-      - name: 🛤️ Setup the dotnet build environment
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 8.0.406
-
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ClementTsang/cargo-action@v0.0.3
-        with:
-          command: build
-          args: -r --target x86_64-pc-windows-msvc
-          directory: Carbon.Core/Carbon.Native
-          
-      - name: 🔨 Setup the Carbon build environment
-        shell: cmd
-        run: |
-          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/bootstrap.cr
-
-      - name: 🔨 Built Carbon on Windows
-        shell: cmd
-        run: |
-          set VERSION=${{ needs.bootstrap.outputs.version }}
-          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Debug EDGE edge_build
-          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Minimal EDGE edge_build
-
-      - name: ⬆️ Upload the artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-develop-windows
-          path: |
-            Release/Carbon.Windows.Debug.zip
+            Release/Carbon.Windows.Debug.tar.gz
             Release/Carbon.Windows.Debug.info
-            Release/Carbon.Windows.Minimal.zip
+            Release/Carbon.Windows.Minimal.tar.gz
             Release/Carbon.Windows.Minimal.info
 
   # RELEASE --------------------------------------------------------------------
   release-on-commit:
     name: 💾 Edge Release
-    needs: ["bootstrap", "build-linux", "build-windows"]
+    needs: ["bootstrap", "build-linux"]
     runs-on: ubuntu-latest
 
     steps:
@@ -196,9 +161,9 @@ jobs:
           files: |
             Release/build-develop-linux/Carbon.Linux.Debug.info
             Release/build-develop-linux/Carbon.Linux.Debug.tar.gz
-            Release/build-develop-windows/Carbon.Windows.Debug.info
-            Release/build-develop-windows/Carbon.Windows.Debug.zip     
+            Release/build-develop-linux/Carbon.Windows.Debug.info
+            Release/build-develop-linux/Carbon.Windows.Debug.zip     
             Release/build-develop-linux/Carbon.Linux.Minimal.info
             Release/build-develop-linux/Carbon.Linux.Minimal.tar.gz
-            Release/build-develop-windows/Carbon.Windows.Minimal.info
-            Release/build-develop-windows/Carbon.Windows.Minimal.zip
+            Release/build-develop-linux/Carbon.Windows.Minimal.info
+            Release/build-develop-linux/Carbon.Windows.Minimal.zip
