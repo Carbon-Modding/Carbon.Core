@@ -1,6 +1,6 @@
-var target = GetArg(1, "release");
+var branch = GetArg(0, "release");
 
-Warn($"Target: {target}");
+Warn($"Branch: {branch}");
 
 DownloadRustFiles("windows");
 DownloadRustFiles("linux");
@@ -12,7 +12,7 @@ void DownloadRustFiles(string platform)
 		"-os", platform, 
 		"-validate", 
 		"-app 258550",
-		"-branch", target, 
+		"-branch", branch, 
 		"-filelist", PathEnquotes(Home, "Tools", "Helpers", "258550_refs.txt"),
 		"-dir", PathEnquotes(Home, "Rust", platform));
 		

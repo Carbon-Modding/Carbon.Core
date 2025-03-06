@@ -79,7 +79,7 @@ public class _Runner : Carbon.Runner.InternalRunner
 	}
 	internal static void Run(string file, string[] args, bool shouldExit)
 	{
-		if (args.Length < 1)
+		if (string.IsNullOrEmpty(file))
 		{
 			var executors = new List<Executor>();
 			var baseExecutor = typeof(Executor);
