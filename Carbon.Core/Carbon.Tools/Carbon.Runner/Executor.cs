@@ -25,6 +25,7 @@ public abstract class Executor
 	}
 	public void Warn(object message)
 	{
+		if (IsQuiet) return;
 		InternalRunner.Warn($"{Name?.ToUpperInvariant()}| {message}");
 	}
 	public void Error(object message)

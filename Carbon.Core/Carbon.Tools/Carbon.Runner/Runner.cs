@@ -9,12 +9,13 @@ namespace Carbon.Runner;
 
 public class InternalRunner
 {
-	public static Carbon.Runner.Executors.Program Program = new();
+	public static Executors.Program Program = new();
 	public static DotNet DotNet = new();
 	public static Git Git = new();
 	public static Copy Copy = new();
 	public static Files Files = new();
 	public static Directories Directories = new();
+	public static Archive Archive = new();
 
 	public static string[] GlobalArgs { get; set; }
 	public static string Home => Environment.CurrentDirectory;
