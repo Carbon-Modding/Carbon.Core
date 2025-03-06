@@ -16,7 +16,6 @@ jobs:
   bootstrap:
     name: 🥾 Bootstrap
     runs-on: ubuntu-latest
-    container: debian:bullseye
 
     outputs:
       date: ${{ steps.step1.outputs.date }}
