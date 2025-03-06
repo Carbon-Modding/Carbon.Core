@@ -1,6 +1,7 @@
-var temp = Path(Home, "Carbon.Core", ".tmp");
-var localTag = GetArg(1);
+var localTag = GetArg(0);
+Warn($"Local Tag: {localTag}");
 
+var temp = Path(Home, "Carbon.Core", ".tmp");
 Directories.Create(temp);
 
 Git.Run("fetch", "--tags");

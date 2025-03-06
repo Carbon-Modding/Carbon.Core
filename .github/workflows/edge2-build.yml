@@ -1,0 +1,203 @@
+name: Edge Build
+concurrency: build-3-edge
+
+on:
+  workflow_dispatch:
+  
+  push:
+    branches:
+      - develop
+
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  bootstrap:
+    name: 🥾 Bootstrap
+    runs-on: ubuntu-latest
+
+    outputs:
+      date: ${{ steps.step1.outputs.date }}
+      clock: ${{ steps.step1.outputs.clock }}
+      tag: ${{ steps.step1.outputs.tag }}
+      ref: ${{ steps.step1.outputs.ref }}
+      version: ${{ steps.step1.outputs.version }}
+
+    steps:
+      #- name: Log environment
+      #  uses: crazy-max/ghaction-dump-context@v1
+
+      - name: 🔗 Checkout source code from github
+        uses: actions/checkout@v3
+              
+      - name: 📅 Prepare the environment
+        id: step1
+        shell: bash
+        run: |
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+          echo "clock=$(date +'%H:%M:%S')" >> $GITHUB_OUTPUT
+          echo "tag=$(date +'%Yd%j')" >> $GITHUB_OUTPUT
+          echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "version=2.1.$(curl -s -L 'https://carbonmod.gg/version?id=edge&token=${{secrets.VERSIONS_TOKEN}}')" >> $GITHUB_OUTPUT
+
+  # BUILD LINUX ----------------------------------------------------------------
+  build-linux:
+    name: 🐧 Linux
+    needs: bootstrap
+    runs-on: ubuntu-latest
+    continue-on-error: false
+
+    outputs:
+      artifact: build-develop-${{ needs.bootstrap.outputs.ref }}-linux
+      build_info: Built at ${{ needs.bootstrap.outputs.date }} ${{ needs.bootstrap.outputs.clock }} based on commit ${{ needs.bootstrap.outputs.ref }}.
+
+    steps:
+      - name: 🔗 Checkout source code from github
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_ALL_REPO }}
+          submodules: recursive
+
+      - name: 🛤️ Setup the dotnet build environment
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 9.0.200
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ClementTsang/cargo-action@v0.0.3
+        with:
+          command: build
+          args: -r --target x86_64-unknown-linux-gnu
+          directory: Carbon.Core/Carbon.Native
+
+      - name: 🔨 Setup the Carbon build environment
+        shell: bash
+        run: |
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/bootstrap.cr
+
+      - name: 🐧 Built Carbon on Linux
+        shell: bash
+        run: |
+          export VERSION=${{ needs.bootstrap.outputs.version }}
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr DebugUnix EDGE edge_build
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr MinimalUnix EDGE edge_build
+
+      - name: ⬆️ Upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-develop-linux
+          path: |
+            Release/Carbon.Linux.Debug.tar.gz
+            Release/Carbon.Linux.Debug.info
+            Release/Carbon.Linux.Minimal.tar.gz
+            Release/Carbon.Linux.Minimal.info
+
+  # BUILD WINDOWS --------------------------------------------------------------
+  build-windows:
+    name: 💻 Windows
+    needs: bootstrap
+    runs-on: windows-latest
+    continue-on-error: false
+
+    steps:
+      - name: 🔗 Checkout source code from github
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.PAT_ALL_REPO }}
+          submodules: recursive
+
+      - name: 🛤️ Setup the dotnet build environment
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 9.0.200
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ClementTsang/cargo-action@v0.0.3
+        with:
+          command: build
+          args: -r --target x86_64-pc-windows-msvc
+          directory: Carbon.Core/Carbon.Native
+          
+      - name: 🔨 Setup the Carbon build environment
+        shell: cmd
+        run: |
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/bootstrap.cr
+
+      - name: 🔨 Built Carbon on Windows
+        shell: cmd
+        run: |
+          set VERSION=${{ needs.bootstrap.outputs.version }}
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Debug EDGE edge_build
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Minimal EDGE edge_build
+
+      - name: ⬆️ Upload the artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-develop-windows
+          path: |
+            Release/Carbon.Windows.Debug.zip
+            Release/Carbon.Windows.Debug.info
+            Release/Carbon.Windows.Minimal.zip
+            Release/Carbon.Windows.Minimal.info
+
+  # RELEASE --------------------------------------------------------------------
+  release-on-commit:
+    name: 💾 Edge Release
+    needs: ["bootstrap", "build-linux", "build-windows"]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🗑️ Delete existing release tag
+        uses: dev-drprasad/delete-tag-and-release@92d94d77429cb0436597047a92369526a5824f50
+        with:
+          delete_release: true
+          tag_name: edge_build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 💤 Sleep for 5 seconds
+        run: sleep 5s
+        shell: bash
+
+      - name: ⬇️ Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: Release
+
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: Release
+
+      - name: 🏷️ Update release tag
+        uses: softprops/action-gh-release@a92196038060e0c673cf3ba5b98710dd716731df
+        with:
+          draft: false
+          prerelease: true
+          tag_name: edge_build
+          name: "Edge Build — v${{ needs.bootstrap.outputs.version }}"
+          body: |
+            This is a development build of Carbon based on the latest commit pushed to the repository.
+            This build is best used to test the very last changes that can be found in the commit history list, since the [preview] and [stable] builds.
+
+            This build is targeted at developers.
+            The general public is advised to use one of the [stable] or [preview] builds.
+
+            ### How to install
+            1. Download the `Carbon.[Windows|Linux].Debug` archive from the attachments below.
+            2. Unzip the archive to the root of your Rust Dedicated Server.
+            3. Restart the server and enjoy.
+
+            ${{ needs.build-linux.outputs.build_info }}
+
+            [stable]: https://github.com/CarbonCommunity/Carbon.Core/releases/latest
+            [preview]: https://github.com/CarbonCommunity/Carbon.Core/releases/preview_build
+          files: |
+            Release/build-develop-linux/Carbon.Linux.Debug.info
+            Release/build-develop-linux/Carbon.Linux.Debug.tar.gz
+            Release/build-develop-windows/Carbon.Windows.Debug.info
+            Release/build-develop-windows/Carbon.Windows.Debug.zip     
+            Release/build-develop-linux/Carbon.Linux.Minimal.info
+            Release/build-develop-linux/Carbon.Linux.Minimal.tar.gz
+            Release/build-develop-windows/Carbon.Windows.Minimal.info
+            Release/build-develop-windows/Carbon.Windows.Minimal.zip

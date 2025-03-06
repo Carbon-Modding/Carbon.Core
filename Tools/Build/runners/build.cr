@@ -1,11 +1,11 @@
-Run(Path(Home, "Tools", "Build", "runners", "git.cr"));
-
 var target = GetArg(1, "Debug");
 var defines = GetArg(2);
 var version = GetVariable("VERSION");
-var tag = target.Replace("Unix", string.Empty);
+var tag = GetArg(3, "edge_build");
 var cargoTarget = target.Equals("Debug") || target.Equals("DebugUnix") || target.Equals("Minimal") || target.Equals("MinimalUnix") ? "release" : "prod";
 var isUnix = target.Contains("Unix");
+
+Run(Path(Home, "Tools", "Build", "runners", "git.cr"), tag);
 
 Warn($"Tag: {tag}");
 Warn($"Target: {target}");
@@ -37,14 +37,15 @@ else
 }
 
 var tos = isUnix ? "Linux" : "Windows";
+var finalTarget = target.Replace("Unix", string.Empty);
 
 Directories.Delete(Path(Home, "Release", ".tmp", target, "profiler"));
 
 if(isUnix)
 {
-	Archive.Tar(Path(Home, "Release", ".tmp", target), Path(Home, "Release", $"Carbon.{tos}.{tag}.tar.gz"));
+	Archive.Tar(Path(Home, "Release", ".tmp", target), Path(Home, "Release", $"Carbon.{tos}.{finalTarget}.tar.gz"));
 }
 else
 {
-	Archive.Zip(Path(Home, "Release", ".tmp", target), Path(Home, "Release", $"Carbon.{tos}.{tag}.zip"));
+	Archive.Zip(Path(Home, "Release", ".tmp", target), Path(Home, "Release", $"Carbon.{tos}.{finalTarget}.zip"));
 }

@@ -9,9 +9,6 @@ namespace Carbon.Generator;
 
 public class InternalCallHook
 {
-	private static string _ifDirective = "#if";
-	private static string _elifDirective = "#elif";
-
 	public static void Generate(CompilationUnitSyntax input, out CompilationUnitSyntax output, out MethodDeclarationSyntax generatedMethod, out bool isPartial, bool baseCall = false, string baseName = "plugin", List<ClassDeclarationSyntax> classList = null)
 	{
 		var methodContents = $"\n\tvar length = args?.Length;\ntry {{ switch(hook) {{ ";

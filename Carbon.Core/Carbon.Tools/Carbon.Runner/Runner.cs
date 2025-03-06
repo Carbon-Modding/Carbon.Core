@@ -17,7 +17,7 @@ public class InternalRunner
 	public static Directories Directories = new();
 	public static Archive Archive = new();
 
-	public static string[] GlobalArgs { get; set; }
+	public string[] Args { get; set; }
 	public static string Home => Environment.CurrentDirectory;
 	public static void SetHome(string directory)
 	{
@@ -26,14 +26,14 @@ public class InternalRunner
 	public static string Path(params string[] paths) => System.IO.Path.Combine(paths);
 	public static string PathEnquotes(params string[] paths) => $"\"{Path(paths)}\"";
 
-	public static bool HasArgs(int minArgs) => GlobalArgs.Length >= minArgs;
-	public static string GetArg(int index, string defaultValue = null)
+	public bool HasArgs(int minArgs) => Args.Length >= minArgs;
+	public string GetArg(int index, string? defaultValue = null)
 	{
-		if (index >= GlobalArgs.Length)
+		if (index >= Args.Length)
 		{
 			return defaultValue;
 		}
-		return GlobalArgs[index];
+		return Args[index];
 	}
 	public static void Write(object message, ConsoleColor color)
 	{
@@ -61,7 +61,7 @@ using System.Threading.Tasks;
 
 public class _Runner : Carbon.Runner.InternalRunner
 {{
-	public static async ValueTask Run(string[] args)
+	public async ValueTask Run(string[] args)
 	{{
 		try
 		{{
@@ -79,6 +79,43 @@ public class _Runner : Carbon.Runner.InternalRunner
 	}
 	internal static void Run(string file, string[] args, bool shouldExit)
 	{
+		if (args.Length < 1)
+		{
+			var executors = new List<Executor>();
+			var baseExecutor = typeof(Executor);
+
+			foreach (var type in typeof(InternalRunner).Assembly.GetTypes())
+			{
+				if (baseExecutor != type && baseExecutor.IsAssignableFrom(type))
+				{
+					executors.Add(Activator.CreateInstance(type) as Executor ?? throw new InvalidOperationException());
+				}
+			}
+
+			Error("Missing Carbon runner file!");
+			Log($"Available Executors ({executors.Count:n0})\n{string.Join("\n", executors.Select(x =>
+			{
+				var result = string.Empty;
+				var exposedMethods = x.GetType().GetMethods();
+
+				foreach (var method in exposedMethods)
+				{
+					var expose = method.GetCustomAttribute<Expose>();
+					if (expose == null)
+					{
+						continue;
+					}
+					result += $"  {x.Name}.{method.Name}( {string.Join(", ", method.GetParameters().Select(y => $"{y.ParameterType.FullName} {y.Name}"))} ) [{expose.Help}]\n";
+				}
+				return result;
+			}))}");
+			if (shouldExit)
+			{
+				Exit(1);
+			}
+			return;
+		}
+
 		if (!File.Exists(file))
 		{
 			Error($"Runner file '{file}' not found");
@@ -123,7 +160,9 @@ public class _Runner : Carbon.Runner.InternalRunner
 		}
 
 		var assembly = Assembly.Load(dllStream.ToArray());
-		var runner = assembly.GetType("_Runner");
-		runner?.GetMethod("Run")?.Invoke(null, new object[] { args.Skip(2).ToArray() });
+		var runnerType = assembly.GetType("_Runner");
+		var runner = Activator.CreateInstance(runnerType!) as InternalRunner;
+		runner!.Args = args;
+		runnerType?.GetMethod("Run")?.Invoke(runner, [args.Skip(2).ToArray()]);
 	}
 }
