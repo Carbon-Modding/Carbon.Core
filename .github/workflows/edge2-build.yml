@@ -54,6 +54,12 @@ jobs:
       build_info: Built at ${{ needs.bootstrap.outputs.date }} ${{ needs.bootstrap.outputs.clock }} based on commit ${{ needs.bootstrap.outputs.ref }}.
 
     steps:
+      - name: 🔨 Installing Applications
+        shell: bash
+        run: |
+          sudo apt update
+          sudo apt install git
+    
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
         with:
