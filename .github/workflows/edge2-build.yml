@@ -46,20 +46,14 @@ jobs:
     name: 🐧 Linux
     needs: bootstrap
     runs-on: ubuntu-latest
-    container: debian:bullseye
+    container: rust:bullseye
     continue-on-error: false
 
     outputs:
       artifact: build-develop-${{ needs.bootstrap.outputs.ref }}-linux
       build_info: Built at ${{ needs.bootstrap.outputs.date }} ${{ needs.bootstrap.outputs.clock }} based on commit ${{ needs.bootstrap.outputs.ref }}.
 
-    steps:
-      - name: 🔨 Installing Applications
-        shell: bash
-        run: |
-          apt update
-          apt install git
-    
+    steps:   
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
         with:
