@@ -57,8 +57,8 @@ jobs:
       - name: 🔨 Installing Applications
         shell: bash
         run: |
-          sudo apt update
-          sudo apt install git
+          apt update
+          apt install git
     
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
