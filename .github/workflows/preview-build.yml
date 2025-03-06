@@ -15,7 +15,7 @@ on:
 jobs:
   bootstrap:
     name: 🥾 Bootstrap
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     outputs:
       date: ${{ steps.step1.outputs.date }}
@@ -25,9 +25,6 @@ jobs:
       version: ${{ steps.step1.outputs.version }}
 
     steps:
-      #- name: Log environment
-      #  uses: crazy-max/ghaction-dump-context@v1
-
       - name: 🔗 Checkout source code from github
         uses: actions/checkout@v3
         with:
@@ -42,11 +39,11 @@ jobs:
           echo "ref=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
           echo "version=2.2.$(curl -s -L 'https://carbonmod.gg/version?id=preview&token=${{secrets.VERSIONS_TOKEN}}')" >> $GITHUB_OUTPUT
 
-  # BUILD LINUX ----------------------------------------------------------------
-  build-linux:
+  build:
     name: 🐧 Linux
     needs: bootstrap
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
+    container: rust:bullseye
     continue-on-error: false
 
     outputs:
@@ -60,11 +57,27 @@ jobs:
           ref: preview
           token: ${{ secrets.PAT_ALL_REPO }}
           submodules: recursive
+          
+      - name: 🔨 Rust update
+        shell: bash
+        run: |
+          apt update
+          apt install -y mingw-w64
+          
+          rustup install stable
+          rustup default stable
+          rustup target add x86_64-pc-windows-gnu
+          rustup component add rust-std --target x86_64-pc-windows-gnu
+          rustup show
+          rustc --print sysroot
+          
+          which x86_64-w64-mingw32-dlltool || echo "dlltool not found"
+          x86_64-w64-mingw32-dlltool --version
 
       - name: 🛤️ Setup the dotnet build environment
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 9.0.200
+          dotnet-version: 8.0.406
 
       - uses: dtolnay/rust-toolchain@stable
       - uses: ClementTsang/cargo-action@v0.0.3
@@ -72,11 +85,18 @@ jobs:
           command: build
           args: -r --target x86_64-unknown-linux-gnu
           directory: Carbon.Core/Carbon.Native
+          
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: ClementTsang/cargo-action@v0.0.3
+        with:
+          command: build
+          args: -r --target x86_64-pc-windows-gnu
+          directory: Carbon.Core/Carbon.Native
 
       - name: 🔨 Setup the Carbon build environment
         shell: bash
         run: |
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/bootstrap.sh
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/bootstrap.cr
 
       - name: 🔨 Setup the Carbon build environment (Staging)
         shell: bash
@@ -88,82 +108,27 @@ jobs:
         shell: bash
         run: |
           export VERSION=${{ needs.bootstrap.outputs.version }}
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh DebugUnix "PREVIEW" "preview_build"
-          ${GITHUB_WORKSPACE}/Tools/Build/linux/build.sh MinimalUnix "PREVIEW" "preview_build"
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Debug PREVIEW preview_build
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr DebugUnix PREVIEW preview_build
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr Minimal PREVIEW preview_build
+          dotnet run --project Carbon.Core/Carbon.Tools/Carbon.Runner Tools/Build/runners/build.cr MinimalUnix PREVIEW preview_build
 
       - name: ⬆️ Upload the artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: build-preview-linux
+          name: build-preview
           path: |
             Release/Carbon.Linux.Debug.tar.gz
             Release/Carbon.Linux.Debug.info
             Release/Carbon.Linux.Minimal.tar.gz
             Release/Carbon.Linux.Minimal.info
 
-  # BUILD WINDOWS --------------------------------------------------------------
-  build-windows:
-    name: 💻 Windows
-    needs: bootstrap
-    runs-on: windows-latest
-    continue-on-error: false
-
-    steps:
-      - name: 🔗 Checkout source code from github
-        uses: actions/checkout@v3
-        with:
-          ref: preview
-          token: ${{ secrets.PAT_ALL_REPO }}
-          submodules: recursive
-
-      - name: 🛤️ Setup the dotnet build environment
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 9.0.200
-
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: ClementTsang/cargo-action@v0.0.3
-        with:
-          command: build
-          args: -r --target x86_64-pc-windows-msvc
-          directory: Carbon.Core/Carbon.Native
-
-      - name: 🔨 Setup the Carbon build environment
-        shell: cmd
-        run: |
-          %GITHUB_WORKSPACE%\Tools\Build\win\bootstrap.bat
-
-      - name: 🔨 Setup the Carbon build environment (Staging)
-        shell: cmd
-        run: |
-          %GITHUB_WORKSPACE%\Tools\Build\win\update_staging.bat
-        if: ${{ inputs.staging == 'true' }}
-
-      - name: 🔨 Built Carbon on Windows
-        shell: cmd
-        run: |
-          set VERSION=${{ needs.bootstrap.outputs.version }}
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Debug PREVIEW preview_build
-          call %GITHUB_WORKSPACE%\Tools\Build\win\build.bat Minimal PREVIEW preview_build
-
-      - name: ⬆️ Upload the artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-preview-windows
-          path: |
-            Release/Carbon.Windows.Debug.zip
-            Release/Carbon.Windows.Debug.info
-            Release/Carbon.Windows.Minimal.zip
-            Release/Carbon.Windows.Minimal.info
-
   # RELEASE --------------------------------------------------------------------
   release-on-schedule:
     name: 💾 Preview Release
-    needs: ["bootstrap", "build-linux", "build-windows"]
+    needs: ["bootstrap", "build"]
     runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
-    # only release if triggered by the scheduler
-    # or if manually triggered by a developer
 
     steps:
       - name: 🗑️ Delete existing release tag
@@ -210,11 +175,11 @@ jobs:
 
             [stable]: https://github.com/CarbonCommunity/Carbon.Core/releases/latest
           files: |
-            Release/build-preview-linux/Carbon.Linux.Debug.info
-            Release/build-preview-linux/Carbon.Linux.Debug.tar.gz
-            Release/build-preview-windows/Carbon.Windows.Debug.info
-            Release/build-preview-windows/Carbon.Windows.Debug.zip
-            Release/build-preview-linux/Carbon.Linux.Minimal.info
-            Release/build-preview-linux/Carbon.Linux.Minimal.tar.gz
-            Release/build-preview-windows/Carbon.Windows.Minimal.info
-            Release/build-preview-windows/Carbon.Windows.Minimal.zip
+            Release/build-preview/Carbon.Linux.Debug.info
+            Release/build-preview/Carbon.Linux.Debug.tar.gz
+            Release/build-preview/Carbon.Windows.Debug.info
+            Release/build-preview/Carbon.Windows.Debug.zip
+            Release/build-preview/Carbon.Linux.Minimal.info
+            Release/build-preview/Carbon.Linux.Minimal.tar.gz
+            Release/build-preview/Carbon.Windows.Minimal.info
+            Release/build-preview/Carbon.Windows.Minimal.zip
