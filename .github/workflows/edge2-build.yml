@@ -59,6 +59,11 @@ jobs:
         with:
           token: ${{ secrets.PAT_ALL_REPO }}
           submodules: recursive
+          
+      - name: 🔨 Rust update
+        shell: bash
+        run: |
+          rustup target add x86_64-pc-windows-gnu
 
       - name: 🛤️ Setup the dotnet build environment
         uses: actions/setup-dotnet@v2
