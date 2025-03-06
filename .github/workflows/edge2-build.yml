@@ -118,9 +118,9 @@ jobs:
             Release/Carbon.Linux.Debug.info
             Release/Carbon.Linux.Minimal.tar.gz
             Release/Carbon.Linux.Minimal.info
-            Release/Carbon.Windows.Debug.tar.gz
+            Release/Carbon.Windows.Debug.zip
             Release/Carbon.Windows.Debug.info
-            Release/Carbon.Windows.Minimal.tar.gz
+            Release/Carbon.Windows.Minimal.zip
             Release/Carbon.Windows.Minimal.info
 
   # RELEASE --------------------------------------------------------------------
