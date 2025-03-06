@@ -5,12 +5,6 @@ public class CommandLineArguments
 	[Option("plugininput", Required = false, HelpText = "Path to the plugin folder")]
 	public string PluginInput { get; set; }
 
-	[Option("pluginoutput", Required = false, HelpText = "File destination path")]
-	public string PluginOutput { get; set; }
-
-	[Option("pluginname", Required = false, HelpText = "Plugin name")]
-	public string PluginName { get; set; } = @"CorePlugin";
-
 	[Option("pluginnamespace", Required = false, HelpText = "Plugin namespace")]
 	public string PluginNamespace { get; set; } = @"Carbon.Core";
 

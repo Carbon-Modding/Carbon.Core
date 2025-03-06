@@ -11,79 +11,81 @@ public sealed class Generator
 	{
 		try
 		{
-			var options = new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.None, preprocessorSymbols: new string[]
-			{
-				"DEBUG"
-			});
+			var options = new CSharpParseOptions(LanguageVersion.Latest, DocumentationMode.None, preprocessorSymbols: ["DEBUG"]);
+			var inputs = Arguments.PluginInput.Split(';');
 
-			var syntaxTrees = Directory.GetFiles(Arguments.PluginInput, "*.cs", SearchOption.TopDirectoryOnly).Select(file =>
+			foreach(var input in inputs)
 			{
-				Console.Write($"  {Path.GetFileName(file)}");
-				var code = CSharpSyntaxTree.ParseText(File.ReadAllText(file), options);
-				Console.WriteLine(" done.");
-
-				return code;
-			});
-			var nameSpace = (NameSyntax)null;
-			var usings = new List<UsingDirectiveSyntax>();
-			var groupedMembers = new Dictionary<string, List<MemberDeclarationSyntax>>();
-
-			foreach (var syntaxTree in syntaxTrees)
-			{
-				var root = syntaxTree.GetCompilationUnitRoot();
-				usings.AddRange(root.Usings);
-				foreach (var member in root.Members)
+				var syntaxTrees = Directory.GetFiles(input, "*.cs", SearchOption.TopDirectoryOnly).Select(file =>
 				{
-					if (member is FileScopedNamespaceDeclarationSyntax namespaceSyntax)
+					Console.Write($"  {Path.GetFileName(file)}");
+					var code = CSharpSyntaxTree.ParseText(File.ReadAllText(file), options);
+					Console.WriteLine(" done.");
+
+					return code;
+				});
+				var nameSpace = (NameSyntax)null;
+				var usings = new List<UsingDirectiveSyntax>();
+				var groupedMembers = new Dictionary<string, List<MemberDeclarationSyntax>>();
+
+				foreach (var syntaxTree in syntaxTrees)
+				{
+					var root = syntaxTree.GetCompilationUnitRoot();
+					usings.AddRange(root.Usings);
+					foreach (var member in root.Members)
 					{
-						foreach (var type in namespaceSyntax.Members)
+						if (member is FileScopedNamespaceDeclarationSyntax namespaceSyntax)
 						{
-							if (type is ClassDeclarationSyntax classSyntax)
+							foreach (var type in namespaceSyntax.Members)
 							{
-								var key = $"{namespaceSyntax.Name}_{classSyntax.Identifier}";
-								nameSpace = namespaceSyntax.Name;
-
-								if (!groupedMembers.TryGetValue(key, out var list))
+								if (type is ClassDeclarationSyntax classSyntax)
 								{
-									groupedMembers.Add(key, list = new List<MemberDeclarationSyntax>());
-								}
+									var key = $"{namespaceSyntax.Name}_{classSyntax.Identifier}";
+									nameSpace = namespaceSyntax.Name;
 
-								list.AddRange(classSyntax.Members);
+									if (!groupedMembers.TryGetValue(key, out var list))
+									{
+										groupedMembers.Add(key, list = new List<MemberDeclarationSyntax>());
+									}
+
+									list.AddRange(classSyntax.Members);
+								}
 							}
 						}
 					}
 				}
-			}
 
-			var mergedMembers = new List<MemberDeclarationSyntax>();
-			foreach (var group in groupedMembers)
-			{
-				var typeNameParts = group.Key.Split('_');
-				var classSyntax = SyntaxFactory.ClassDeclaration($" {typeNameParts[1]}").WithMembers(SyntaxFactory.List(group.Value));
-				var namespaceSyntax = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(typeNameParts[0].Replace("_", "."))).AddMembers(classSyntax);
-				mergedMembers.Add(namespaceSyntax.Members[namespaceSyntax.Members.Count - 1]);
-			}
+				var mergedMembers = new List<MemberDeclarationSyntax>();
+				foreach (var group in groupedMembers)
+				{
+					var typeNameParts = group.Key.Split('_');
+					var classSyntax = SyntaxFactory.ClassDeclaration($" {typeNameParts[1]}").WithMembers(SyntaxFactory.List(group.Value));
+					var namespaceSyntax = SyntaxFactory.NamespaceDeclaration(SyntaxFactory.ParseName(typeNameParts[0].Replace("_", "."))).AddMembers(classSyntax);
+					mergedMembers.Add(namespaceSyntax.Members[namespaceSyntax.Members.Count - 1]);
+				}
 
-			var compilationUnit = SyntaxFactory.CompilationUnit();
-			var nameSpace2 = SyntaxFactory.NamespaceDeclaration(nameSpace, default, SyntaxFactory.List(usings), SyntaxFactory.List(mergedMembers));
-			compilationUnit = compilationUnit.WithMembers(compilationUnit.Members.Add(nameSpace2));
+				var compilationUnit = SyntaxFactory.CompilationUnit();
+				var nameSpace2 = SyntaxFactory.NamespaceDeclaration(nameSpace, default, SyntaxFactory.List(usings), SyntaxFactory.List(mergedMembers));
+				compilationUnit = compilationUnit.WithMembers(compilationUnit.Members.Add(nameSpace2));
 
-			var classes = new List<ClassDeclarationSyntax>();
+				var classes = new List<ClassDeclarationSyntax>();
 
-			classes.AddRange(nameSpace2.Members.OfType<ClassDeclarationSyntax>());
+				classes.AddRange(nameSpace2.Members.OfType<ClassDeclarationSyntax>());
 
-			Carbon.Generator.InternalCallHook.Generate(compilationUnit, out var output, out var method, out var isPartial, Arguments.BaseCall, Arguments.BaseName, classList: classes);
+				Carbon.Generator.InternalCallHook.Generate(compilationUnit, out var output, out var method, out var isPartial, Arguments.BaseCall, Arguments.BaseName, classList: classes);
 
-			var prettyFormat = $@"{string.Join("\n", usings.Select(x => x.ToString()).Distinct())}
+				var pluginName = Path.GetFileNameWithoutExtension(input);
+				var prettyFormat = $@"{string.Join("\n", usings.Select(x => x.ToString()).Distinct())}
 
 namespace {Arguments.PluginNamespace};
 
-public partial class {Arguments.PluginName}
+public partial class {pluginName}
 {{
 {method.ToFullString()}
 }}";
 
-			File.WriteAllText(Arguments.PluginOutput, CSharpSyntaxTree.ParseText(prettyFormat, options, string.Empty, Encoding.UTF8).GetCompilationUnitRoot().NormalizeWhitespace().ToFullString());
+				File.WriteAllText(Path.Combine(input, $"{pluginName}-Generated.cs"), CSharpSyntaxTree.ParseText(prettyFormat, options, string.Empty, Encoding.UTF8).GetCompilationUnitRoot().NormalizeWhitespace().ToFullString());
+			}
 		}
 		catch (Exception ex)
 		{
